@@ -1,5 +1,6 @@
 import "./Login.css";
 import React, { useState } from "react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 import { auth } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -73,7 +74,9 @@ const Login = () => {
           }}
         ></input>
       </div>
-      <button onClick={login}>Log in</button>
+      <Button colorScheme="blue" type="submit" onClick={login}>
+        Log in
+      </Button>
       <div>Register Here</div>
       <div>
         <p>Email:</p>
@@ -95,9 +98,13 @@ const Login = () => {
           }}
         ></input>
       </div>
-      <button onClick={register}>Register</button>
+      <Button colorScheme="blue" onClick={register}>
+        Register
+      </Button>
       <div>Welcome! {user?.email}</div>
-      <button onClick={logout}>Sign out</button>
+      <Button colorScheme="blue" onClick={logout}>
+        Sign out
+      </Button>
     </div>
   );
 };
