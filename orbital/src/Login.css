@@ -1,0 +1,8 @@
+.login__main {
+  height: 100vh;
+  width: 100vw;
+  background-image: url("../public/background.png");
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
