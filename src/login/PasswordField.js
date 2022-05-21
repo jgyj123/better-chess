@@ -1,17 +1,3 @@
-var _extends =
-  Object.assign ||
-  function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-    return target;
-  };
-
 import {
   FormControl,
   FormLabel,
@@ -40,40 +26,29 @@ export const PasswordField = React.forwardRef((props, ref) => {
     }
   };
 
-  return React.createElement(
-    FormControl,
-    null,
-    React.createElement(FormLabel, { htmlFor: "password" }, "Password"),
-    React.createElement(
-      InputGroup,
-      null,
-      React.createElement(
-        InputRightElement,
-        null,
-        React.createElement(IconButton, {
-          variant: "link",
-          "aria-label": isOpen ? "Mask password" : "Reveal password",
-          icon: isOpen
-            ? React.createElement(HiEyeOff, null)
-            : React.createElement(HiEye, null),
-          onClick: onClickReveal,
-        })
-      ),
-      React.createElement(
-        Input,
-        _extends(
-          {
-            id: "password",
-            ref: mergeRef,
-            name: "password",
-            type: isOpen ? "text" : "password",
-            autoComplete: "current-password",
-            required: true,
-          },
-          props
-        )
-      )
-    )
+  return (
+    <FormControl>
+      <FormLabel htmlFor="password">Password</FormLabel>
+      <InputGroup>
+        <InputRightElement>
+          <IconButton
+            variant="link"
+            aria-label={isOpen ? "Mask password" : "Reveal password"}
+            icon={isOpen ? <HiEyeOff /> : <HiEye />}
+            onClick={onClickReveal}
+          />
+        </InputRightElement>
+        <Input
+          id="password"
+          ref={mergeRef}
+          name="password"
+          type={isOpen ? "text" : "password"}
+          autoComplete="current-password"
+          required
+          {...props}
+        />
+      </InputGroup>
+    </FormControl>
   );
 });
 PasswordField.displayName = "PasswordField";

@@ -25,6 +25,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "@firebase/auth";
+import "./Login.css";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
@@ -93,7 +94,7 @@ export const Login = () => {
           >
             <Heading
               size={useBreakpointValue({
-                base: "xs",
+                base: "s",
                 md: "sm",
               })}
             >
