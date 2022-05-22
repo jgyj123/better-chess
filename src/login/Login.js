@@ -33,13 +33,14 @@ import {
 //   signOut,
 // } from "@firebase/auth";
 import logo from "../logo.svg";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
-  // const [loginEmail, setLoginEmail] = useState("");
-  // const [loginPassword, setLoginPassword] = useState("");
-  // const [registerEmail, setRegisterEmail] = useState("");
-  // const [registerPassword, setRegisterPassword] = useState("");
-  // const [user, setUser] = useState({});
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [user, setUser] = useState({});
 
   // onAuthStateChanged(auth, (currentUser) => {
   //   setUser(currentUser);
@@ -56,18 +57,22 @@ export const Login = () => {
   //     console.log(e.message);
   //   }
   // };
-  // const login = async () => {
-  //   try {
-  //     const user = await signInWithEmailAndPassword(
-  //       auth,
-  //       loginEmail,
-  //       loginPassword
-  //     );
-  //     console.log(user);
-  //   } catch (e) {
-  //     console.log(e.message);
-  //   }
-  // };
+  const login = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginPassword
+      );
+      navigate("/");
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+  const loginWithGoogle = () => {
+    signInWithGoogle();
+    navigate("/");
+  };
 
   // const logout = async () => {
   //   try {
@@ -76,7 +81,7 @@ export const Login = () => {
   //     console.log(e.message);
   //   }
   // };
-
+  const navigate = useNavigate();
   return (
     <Container
       maxW="lg"
@@ -138,9 +143,21 @@ export const Login = () => {
             <Stack spacing="5">
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
-                <Input id="email" type="email" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => {
+                    setLoginEmail(e.target.value);
+                  }}
+                />
               </FormControl>
-              <PasswordField />
+              <PasswordField
+                value={loginPassword}
+                onChange={(e) => {
+                  setLoginPassword(e.target.value);
+                }}
+              />
             </Stack>
             <HStack justify="space-between">
               <Checkbox defaultChecked>Remember me</Checkbox>
@@ -149,7 +166,9 @@ export const Login = () => {
               </Button>
             </HStack>
             <Stack spacing="6">
-              <Button colorScheme="messenger">Sign in</Button>
+              <Button colorScheme="messenger" onClick={login}>
+                Sign in
+              </Button>
               <HStack>
                 <Divider />
                 <Text fontSize="sm" whiteSpace="nowrap" color="muted">
@@ -157,7 +176,7 @@ export const Login = () => {
                 </Text>
                 <Divider />
               </HStack>
-              <OAuthButtonGroup signInWithGoogle={signInWithGoogle} />
+              <OAuthButtonGroup signInWithGoogle={loginWithGoogle} />
             </Stack>
           </Stack>
         </Box>
