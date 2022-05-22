@@ -17,57 +17,65 @@ import {
 import React, { useState } from "react";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
-import { auth } from "../firebase";
 import {
-  createUserWithEmailAndPassword,
+  auth,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "@firebase/auth";
+  signInWithGoogle,
+} from "../firebase";
+// import {
+//   GoogleAuthProvider,
+//   getAuth,
+//   signInWithPopup,
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+//   onAuthStateChanged,
+//   sendPasswordResetEmail,
+//   signOut,
+// } from "@firebase/auth";
 import logo from "../logo.svg";
 
 export const Login = () => {
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [user, setUser] = useState({});
+  // const [loginEmail, setLoginEmail] = useState("");
+  // const [loginPassword, setLoginPassword] = useState("");
+  // const [registerEmail, setRegisterEmail] = useState("");
+  // const [registerPassword, setRegisterPassword] = useState("");
+  // const [user, setUser] = useState({});
 
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-  const register = async () => {
-    try {
-      const user = await createUserWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPassword
-      );
-      console.log(user);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-  const login = async () => {
-    try {
-      const user = await signInWithEmailAndPassword(
-        auth,
-        loginEmail,
-        loginPassword
-      );
-      console.log(user);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
+  // onAuthStateChanged(auth, (currentUser) => {
+  //   setUser(currentUser);
+  // });
+  // const register = async () => {
+  //   try {
+  //     const user = await createUserWithEmailAndPassword(
+  //       auth,
+  //       registerEmail,
+  //       registerPassword
+  //     );
+  //     console.log(user);
+  //   } catch (e) {
+  //     console.log(e.message);
+  //   }
+  // };
+  // const login = async () => {
+  //   try {
+  //     const user = await signInWithEmailAndPassword(
+  //       auth,
+  //       loginEmail,
+  //       loginPassword
+  //     );
+  //     console.log(user);
+  //   } catch (e) {
+  //     console.log(e.message);
+  //   }
+  // };
 
-  const logout = async () => {
-    try {
-      signOut(auth);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
+  // const logout = async () => {
+  //   try {
+  //     signOut(auth);
+  //   } catch (e) {
+  //     console.log(e.message);
+  //   }
+  // };
 
   return (
     <Container
@@ -149,7 +157,7 @@ export const Login = () => {
                 </Text>
                 <Divider />
               </HStack>
-              <OAuthButtonGroup />
+              <OAuthButtonGroup signInWithGoogle={signInWithGoogle} />
             </Stack>
           </Stack>
         </Box>
