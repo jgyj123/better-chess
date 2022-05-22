@@ -15,7 +15,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Logo } from "./Logo";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
 import { auth } from "../firebase";
@@ -25,6 +24,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from "@firebase/auth";
+import logo from "../logo.svg";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
@@ -83,7 +83,7 @@ export const Login = () => {
     >
       <Stack spacing="8">
         <Stack spacing="6">
-          <Logo />
+          <img src={logo} alt="Logo" />
           <Stack
             spacing={{
               base: "2",
