@@ -108,7 +108,6 @@ export const Login = () => {
           </Stack>
         </Stack>
         <Box
-          variant="primary"
           py={{
             base: "0",
             sm: "8",
@@ -117,10 +116,7 @@ export const Login = () => {
             base: "4",
             sm: "10",
           }}
-          bg={useBreakpointValue({
-            base: "transparent",
-            sm: "bg-surface",
-          })}
+          bg="white"
           boxShadow={{
             base: "none",
             sm: useColorModeValue("md", "md-dark"),

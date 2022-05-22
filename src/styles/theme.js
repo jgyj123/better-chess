@@ -1,6 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
-import { BoxStyles as Box } from "./BoxStyles";
 
 export const myTheme = extendTheme({
   styles: {
@@ -12,8 +11,5 @@ export const myTheme = extendTheme({
         lineHeight: "base",
       },
     }),
-    components: {
-      Box,
-    },
   },
 });
