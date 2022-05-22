@@ -1,5 +1,6 @@
 import "./Login.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@chakra-ui/react";
 import { auth } from "./firebase";
 import {
@@ -14,6 +15,7 @@ const Login = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
   onAuthStateChanged(auth, (currentUser) => {
     setUser(currentUser);
@@ -41,6 +43,7 @@ const Login = () => {
     } catch (e) {
       console.log(e.message);
     }
+    navigate("/");
   };
 
   const logout = async () => {

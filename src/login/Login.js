@@ -17,9 +17,14 @@ import {
 import React, { useState } from "react";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
+<<<<<<< Updated upstream
+=======
+import { auth, provider } from "../firebase";
+>>>>>>> Stashed changes
 import {
   auth,
   signInWithEmailAndPassword,
+<<<<<<< Updated upstream
   signInWithGoogle,
 } from "../firebase";
 // import {
@@ -68,6 +73,65 @@ export const Login = () => {
   //     console.log(e.message);
   //   }
   // };
+=======
+  onAuthStateChanged,
+  signOut,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "@firebase/auth";
+import { useNavigate } from "react-router-dom";
+
+export const Login = () => {
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+  const [user, setUser] = useState({});
+  const navigate = useNavigate();
+
+  onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+
+  const loginWithGoogle = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        // The signed-in user info.
+        const user = result.user;
+        navigate("/");
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        console.log(error.message);
+      });
+  };
+  const register = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        registerEmail,
+        registerPassword
+      );
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+  const login = async () => {
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        loginEmail,
+        loginPassword
+      );
+      navigate("/");
+    } catch (e) {
+      console.log(e.message);
+      alert("Please enter a valid email/password");
+    }
+  };
+>>>>>>> Stashed changes
 
   // const logout = async () => {
   //   try {
@@ -138,18 +202,36 @@ export const Login = () => {
             <Stack spacing="5">
               <FormControl>
                 <FormLabel htmlFor="email">Email</FormLabel>
-                <Input id="email" type="email" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={loginEmail}
+                  onChange={(e) => {
+                    setLoginEmail(e.target.value);
+                  }}
+                />
               </FormControl>
-              <PasswordField />
+              <PasswordField
+                value={loginPassword}
+                onChange={(e) => {
+                  setLoginPassword(e.target.value);
+                }}
+              />
             </Stack>
             <HStack justify="space-between">
               <Checkbox defaultChecked>Remember me</Checkbox>
               <Button variant="link" colorScheme="blue" size="sm">
-                Forgot password?
+                Forgot password? {user?.email}
               </Button>
             </HStack>
             <Stack spacing="6">
+<<<<<<< Updated upstream
               <Button colorScheme="messenger">Sign in</Button>
+=======
+              <Button variant="primary" onClick={login}>
+                Sign in
+              </Button>
+>>>>>>> Stashed changes
               <HStack>
                 <Divider />
                 <Text fontSize="sm" whiteSpace="nowrap" color="muted">
@@ -157,7 +239,12 @@ export const Login = () => {
                 </Text>
                 <Divider />
               </HStack>
+<<<<<<< Updated upstream
               <OAuthButtonGroup signInWithGoogle={signInWithGoogle} />
+=======
+              <OAuthButtonGroup signIn={loginWithGoogle} />
+              <button onClick={loginWithGoogle}>Log in</button>
+>>>>>>> Stashed changes
             </Stack>
           </Stack>
         </Box>

@@ -9,6 +9,7 @@ const providers = [
   },
 ];
 
+<<<<<<< Updated upstream
 export const OAuthButtonGroup = (props) => (
   <ButtonGroup variant="outline" spacing="4" width="full">
     {providers.map(({ name, icon }) => (
@@ -19,3 +20,21 @@ export const OAuthButtonGroup = (props) => (
     ))}
   </ButtonGroup>
 );
+=======
+export const OAuthButtonGroup = () =>
+  React.createElement(
+    ButtonGroup,
+    { variant: "outline", spacing: "4", width: "full" },
+    providers.map(({ name, icon }) =>
+      React.createElement(
+        Button,
+        {
+          key: name,
+          width: "full",
+        },
+        React.createElement(VisuallyHidden, null, "Sign in with ", name),
+        icon
+      )
+    )
+  );
+>>>>>>> Stashed changes

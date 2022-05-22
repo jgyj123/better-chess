@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+<<<<<<< Updated upstream
 import {
   GoogleAuthProvider,
   getAuth,
@@ -16,6 +17,11 @@ import {
   where,
   addDoc,
 } from "firebase/firestore";
+=======
+import { getAuth } from "firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
+
+>>>>>>> Stashed changes
 const firebaseConfig = {
   apiKey: "AIzaSyBPI60oU96_5dXiknml_3ktN1yOvrLshJA",
   authDomain: "orbital-fried-liver.firebaseapp.com",
@@ -29,6 +35,7 @@ const firebaseConfig = {
 // Initialize Firebase
 // eslint-disable-next-line no-unused-vars
 const app = initializeApp(firebaseConfig);
+<<<<<<< Updated upstream
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -96,3 +103,7 @@ export {
   sendPasswordReset,
   logout,
 };
+=======
+export const provider = new GoogleAuthProvider();
+export const auth = getAuth();
+>>>>>>> Stashed changes
