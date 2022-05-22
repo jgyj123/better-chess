@@ -25,7 +25,6 @@ import {
   onAuthStateChanged,
   signOut,
 } from "@firebase/auth";
-import "./Login.css";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
@@ -109,6 +108,7 @@ export const Login = () => {
           </Stack>
         </Stack>
         <Box
+          variant="primary"
           py={{
             base: "0",
             sm: "8",

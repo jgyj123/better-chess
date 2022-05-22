@@ -4,9 +4,11 @@ import "./App.css";
 import Login from "./login/Login";
 import { ChakraProvider } from "@chakra-ui/react";
 import Game from "./Game";
+import { myTheme } from "./styles/theme";
+
 const App = () => {
   return (
-    <ChakraProvider>
+    <ChakraProvider resetCSS theme={myTheme}>
       <div>
         <Router>
           <Routes>
