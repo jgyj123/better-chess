@@ -5,6 +5,7 @@ import Login from "./login/Login";
 import { ChakraProvider } from "@chakra-ui/react";
 import Game from "./Game";
 import { myTheme } from "./styles/theme";
+import Home from "./Home";
 
 const App = () => {
   return (
@@ -12,7 +13,7 @@ const App = () => {
       <div>
         <Router>
           <Routes>
-            <Route exact path="/" element={<Game />}></Route>
+            <Route exact path="/" element={<Home />}></Route>
             <Route exact path="/login" element={<Login />}></Route>
             <Route exact path="/game" element={<Game />}></Route>
           </Routes>
