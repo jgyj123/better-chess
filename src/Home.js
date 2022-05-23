@@ -9,21 +9,27 @@ import {
   FormLabel,
   Heading,
   HStack,
+  VStack,
   Input,
   Stack,
   Text,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react";
-import OnlinePlayers from "./onlinePlayers/OnlinePlayers";
+import OnlinePlayers from "./components/onlinePlayers/OnlinePlayers";
 import NavBar from "./components/Navbar/Navbar";
-
+import MessageBoard from "./components/messageBoard/MessageBoard";
+import JoinGameButtons from "./components/joinButtons/JoinGameButtons";
 const Home = () => {
   return (
-    <div>
-      <NavBar />
-      <OnlinePlayers />
-    </div>
+    <Box w="100vw">
+      <NavBar w="100%" />
+      <HStack gap={4}>
+        <JoinGameButtons />
+        <MessageBoard />
+        <OnlinePlayers />
+      </HStack>
+    </Box>
   );
 };
 export default Home;

@@ -1,11 +1,12 @@
 import React from "react";
 import OnlinePlayerTile from "./OnlinePlayerTile";
-import { Box, VStack, Center } from "@chakra-ui/react";
+import { Box, VStack, Center, Text } from "@chakra-ui/react";
+import { StackDivider } from "@chakra-ui/react";
 const OnlinePlayers = () => {
   return (
-    <VStack w="30%" background="gray.100">
-      <Center w="100%" borderBottom="1px solid black">
-        Online Players
+    <VStack w="25%" background="white" p="4px" divider={<StackDivider />}>
+      <Center w="100%">
+        <Text fontSize={26}>Online Players</Text>
       </Center>
       <OnlinePlayerTile />
       <OnlinePlayerTile />
