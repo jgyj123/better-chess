@@ -35,7 +35,7 @@ import {
 import logo from "../logo.svg";
 import { useNavigate } from "react-router-dom";
 import { ButtonMod } from "../components/Button";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar/Navbar";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
@@ -86,7 +86,6 @@ export const Login = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <Navbar />
       <Container
         maxW="lg"
         py={{
