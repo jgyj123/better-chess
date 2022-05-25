@@ -12,10 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { DesktopNav } from "./DesktopNav";
-
-export default function WithSubnavigation() {
+export default function Navbar(props) {
   const { isOpen, onToggle } = useDisclosure();
-
   return (
     <Box>
       <Flex
@@ -69,6 +67,7 @@ export default function WithSubnavigation() {
             fontWeight={400}
             variant={"link"}
             href={"#"}
+            onClick={props.useSignIn}
           >
             Sign In
           </Button>
