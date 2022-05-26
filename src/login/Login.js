@@ -82,6 +82,10 @@ export const Login = () => {
       });
   };
 
+  const signUp = () => {
+    navigate("/signUp");
+  };
+
   // const logout = async () => {
   //   try {
   //     signOut(auth);
@@ -123,7 +127,7 @@ export const Login = () => {
               </Heading>
               <HStack spacing="1" justify="center">
                 <Text color="muted">Don&apos;t have an account?</Text>
-                <Button variant="link" colorScheme="blue">
+                <Button variant="link" colorScheme="blue" onClick={signUp}>
                   Sign up
                 </Button>
               </HStack>
