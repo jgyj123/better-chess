@@ -6,6 +6,7 @@ import {
   AvatarBadge,
   AvatarGroup,
 } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 export default function ButtonGroup(props) {
   return props.user == null ? (
@@ -40,6 +41,8 @@ export default function ButtonGroup(props) {
       </Button>
     </Stack>
   ) : (
-    <Avatar name={props.user.displayName} src={props.user.photoURL} />
+    <Link to="/">
+      <Avatar name={props.user.displayName} src={props.user.photoURL} />
+    </Link>
   );
 }
