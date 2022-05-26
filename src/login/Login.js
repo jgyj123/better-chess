@@ -34,14 +34,14 @@ import {
 // } from "@firebase/auth";
 import logo from "../logo.svg";
 import { useNavigate } from "react-router-dom";
-import { ButtonMod } from "../components/Button";
+import { ButtonMod } from "../components/ButtonMod";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState();
 
   // onAuthStateChanged(auth, (currentUser) => {
   //   setUser(currentUser);
@@ -71,8 +71,15 @@ export const Login = () => {
     }
   };
   const loginWithGoogle = () => {
-    signInWithGoogle();
-    navigate("/");
+    signInWithGoogle()
+      .then(() => {
+        alert("Login Success!");
+        navigate("/");
+      })
+      .catch(function (error) {
+        console.log(error.code);
+        alert(error.message);
+      });
   };
 
   // const logout = async () => {
@@ -154,8 +161,6 @@ export const Login = () => {
                     }}
                   />
                 </FormControl>
-
-                <ButtonMod text="hi" loadingText="loading" />
                 <PasswordField
                   value={loginPassword}
                   onChange={(e) => {

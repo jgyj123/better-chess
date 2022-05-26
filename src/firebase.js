@@ -33,6 +33,19 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 const googleProvider = new GoogleAuthProvider();
+const onAuthStateChanged =
+  (auth,
+  (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+      const uid = user.uid;
+      // ...
+    } else {
+      // User is signed out
+      // ...
+    }
+  });
 const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
@@ -95,5 +108,6 @@ export {
   registerWithEmailAndPassword,
   sendPasswordReset,
   signInWithEmailAndPassword,
+  onAuthStateChanged,
   logout,
 };

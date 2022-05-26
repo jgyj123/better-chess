@@ -12,8 +12,13 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { DesktopNav } from "./DesktopNav";
+import { auth } from "../../firebase";
+import { Avatar, AvatarBadge, AvatarGroup } from "@chakra-ui/react";
+import ButtonGroup from "./ButtonGroup";
+
 export default function Navbar(props) {
   const { isOpen, onToggle } = useDisclosure();
+  const user = auth.currentUser;
   return (
     <Box>
       <Flex
@@ -54,37 +59,7 @@ export default function Navbar(props) {
             <DesktopNav />
           </Flex>
         </Flex>
-
-        <Stack
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-        >
-          <Button
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"#"}
-            onClick={props.useSignIn}
-          >
-            Sign In
-          </Button>
-          <Button
-            display={{ base: "none", md: "inline-flex" }}
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            href={"#"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button>
-        </Stack>
+        <ButtonGroup useSignIn={props.useSignIn} user={user} />
       </Flex>
     </Box>
   );
