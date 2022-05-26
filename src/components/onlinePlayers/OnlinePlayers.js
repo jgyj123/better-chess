@@ -4,7 +4,13 @@ import { Box, VStack, Center, Text } from "@chakra-ui/react";
 import { StackDivider } from "@chakra-ui/react";
 const OnlinePlayers = () => {
   return (
-    <VStack w="25%" background="white" p="4px" divider={<StackDivider />}>
+    <VStack
+      w="25%"
+      background="white"
+      p="4px"
+      shadow="lg"
+      divider={<StackDivider />}
+    >
       <Center w="100%">
         <Text fontSize={26}>Online Players</Text>
       </Center>
