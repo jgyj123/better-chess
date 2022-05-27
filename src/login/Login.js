@@ -32,9 +32,9 @@ import {
 //   sendPasswordResetEmail,
 //   signOut,
 // } from "@firebase/auth";
-import logo from "../logo.svg";
+import logo from "../components/Logo.png";
 import { useNavigate } from "react-router-dom";
-import { ButtonMod } from "../components/ButtonMod";
+import "./Login.css";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
@@ -95,7 +95,14 @@ export const Login = () => {
   // };
   const navigate = useNavigate();
   return (
-    <div>
+    <div className="container">
+      <img
+        className="logo"
+        src={logo}
+        height="128px"
+        width="128px"
+        alt="Logo"
+      />
       <Container
         maxW="lg"
         py={{
@@ -109,7 +116,6 @@ export const Login = () => {
       >
         <Stack spacing="8">
           <Stack spacing="6">
-            <img src={logo} alt="Logo" />
             <Stack
               spacing={{
                 base: "2",

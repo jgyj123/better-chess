@@ -13,8 +13,9 @@ import {
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { DesktopNav } from "./DesktopNav";
 import { auth } from "../../firebase";
-import { Avatar, AvatarBadge, AvatarGroup } from "@chakra-ui/react";
 import ButtonGroup from "./ButtonGroup";
+import logo from "../Logo.png";
+import { Link } from "react-router-dom";
 
 export default function Navbar(props) {
   const { isOpen, onToggle } = useDisclosure();
@@ -32,29 +33,17 @@ export default function Navbar(props) {
         borderColor={useColorModeValue("gray.200", "gray.900")}
         align={"center"}
       >
-        <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
-        >
-          <IconButton
-            onClick={onToggle}
-            icon={
-              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
+          {/* <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
           >
             Logo
-          </Text>
-
+          </Text> */}
+          <Link to="/">
+            <img src={logo} height="32px" width="32px" alt="logo" />
+          </Link>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
           </Flex>

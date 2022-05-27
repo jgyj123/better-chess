@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  Button,
-  Stack,
-  Avatar,
-  AvatarBadge,
-  AvatarGroup,
-} from "@chakra-ui/react";
+import { Button, Stack, Avatar } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 export default function ButtonGroup(props) {
