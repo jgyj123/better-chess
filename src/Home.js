@@ -20,16 +20,11 @@ import OnlinePlayers from "./components/onlinePlayers/OnlinePlayers";
 import NavBar from "./components/Navbar/Navbar";
 import MessageBoard from "./components/messageBoard/MessageBoard";
 import JoinGameButtons from "./components/joinButtons/JoinGameButtons";
-import { useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const navigate = useNavigate();
-  const signIn = () => {
-    navigate("/login");
-  };
+const Home = (props) => {
   return (
     <Box w="100vw">
-      <NavBar w="100%" useSignIn={signIn} />
+      <NavBar w="100%" user={props.user} useSignIn={props.signIn} />
       <HStack gap={4}>
         <JoinGameButtons />
         <MessageBoard />

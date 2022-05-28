@@ -1,14 +1,12 @@
 import React from "react";
 import { Box, Flex, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { DesktopNav } from "./DesktopNav";
-import { auth } from "../../firebase";
 import ButtonGroup from "./ButtonGroup";
 import logo from "../Logo.png";
 import { Link } from "react-router-dom";
 
 export default function Navbar(props) {
   const { isOpen, onToggle } = useDisclosure();
-  const user = auth.currentUser;
   return (
     <Box>
       <Flex
@@ -30,7 +28,7 @@ export default function Navbar(props) {
             <DesktopNav />
           </Flex>
         </Flex>
-        <ButtonGroup useSignIn={props.useSignIn} user={user} />
+        <ButtonGroup useSignIn={props.useSignIn} user={props.user} />
       </Flex>
     </Box>
   );

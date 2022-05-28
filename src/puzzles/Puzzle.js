@@ -2,10 +2,10 @@ import React from "react";
 import "./Puzzle.css";
 import Navbar from "../components/Navbar/Navbar";
 
-export default function Puzzle() {
+export default function Puzzle(props) {
   return (
     <div>
-      <Navbar />
+      <Navbar user={props.user} useSignIn={props.signIn} />
       <div className="container">
         <iframe
           src="https://lichess.org/training/frame?theme=brown&bg=dark"
