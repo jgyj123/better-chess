@@ -10,8 +10,14 @@ import SignupCard from "./login/SignUp";
 import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/Navbar/Navbar";
 import Puzzle from "./puzzles/Puzzle";
+import { Navigate } from "react-router-dom";
+import { auth } from "./firebase";
 
 const App = () => {
+  const signIn = () => {
+    Navigate("/login");
+  };
+  const user = auth.currentUser;
   return (
     <ChakraProvider resetCSS theme={myTheme}>
       <div>
@@ -22,7 +28,7 @@ const App = () => {
               path="/"
               element={
                 <PrivateRoute>
-                  <Home />
+                  <Home user={user} signIn={signIn} />
                 </PrivateRoute>
               }
             ></Route>
@@ -37,7 +43,11 @@ const App = () => {
                 </PrivateRoute>
               }
             ></Route>
-            <Route exact path="/puzzles" element={<Puzzle />}></Route>
+            <Route
+              exact
+              path="/puzzles"
+              element={<Puzzle user={user} signIn={signIn} />}
+            ></Route>
             <Route exact path="/signUp" element={<SignupCard />}></Route>
           </Routes>
         </Router>
