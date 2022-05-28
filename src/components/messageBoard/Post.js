@@ -3,6 +3,7 @@ import React from "react";
 import { BsFillPersonFill } from "react-icons/bs";
 import { FaChessKing } from "react-icons/fa";
 import { StackDivider } from "@chakra-ui/react";
+import { Avatar } from "@chakra-ui/react";
 
 const Post = (props) => {
   return (
@@ -17,8 +18,13 @@ const Post = (props) => {
         <Flex w="100%" alignItems="center">
           <VStack>
             <HStack>
-              <BsFillPersonFill></BsFillPersonFill>
-              <Text>{props.name}</Text>
+              <Avatar src={props.profilePic}></Avatar>
+              <Box>
+                <Text>{props.name}</Text>
+                <Text color="gray.700" fontSize="10px;">
+                  {new Date(props.date?.toDate()).toLocaleString()}
+                </Text>
+              </Box>
             </HStack>
           </VStack>
 
