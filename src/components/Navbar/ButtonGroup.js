@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Stack, Avatar } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase";
 
 export default function ButtonGroup(props) {
   return props.user == null ? (

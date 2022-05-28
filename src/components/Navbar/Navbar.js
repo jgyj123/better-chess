@@ -4,6 +4,7 @@ import { DesktopNav } from "./DesktopNav";
 import ButtonGroup from "./ButtonGroup";
 import logo from "../Logo.png";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase";
 
 export default function Navbar(props) {
   const { isOpen, onToggle } = useDisclosure();
@@ -28,7 +29,7 @@ export default function Navbar(props) {
             <DesktopNav />
           </Flex>
         </Flex>
-        <ButtonGroup useSignIn={props.useSignIn} user={props.user} />
+        <ButtonGroup useSignIn={props.useSignIn} user={auth.currentUser} />
       </Flex>
     </Box>
   );

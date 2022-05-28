@@ -17,7 +17,6 @@ const App = () => {
   const signIn = () => {
     Navigate("/login");
   };
-  const user = auth.currentUser;
   return (
     <ChakraProvider resetCSS theme={myTheme}>
       <div>
@@ -28,7 +27,7 @@ const App = () => {
               path="/"
               element={
                 <PrivateRoute>
-                  <Home user={user} signIn={signIn} />
+                  <Home signIn={signIn} />
                 </PrivateRoute>
               }
             ></Route>
@@ -46,7 +45,7 @@ const App = () => {
             <Route
               exact
               path="/puzzles"
-              element={<Puzzle user={user} signIn={signIn} />}
+              element={<Puzzle user={auth.currentUser} signIn={signIn} />}
             ></Route>
             <Route exact path="/signUp" element={<SignupCard />}></Route>
           </Routes>

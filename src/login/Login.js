@@ -22,16 +22,15 @@ import {
   signInWithEmailAndPassword,
   signInWithGoogle,
 } from "../firebase";
-// import {
-//   GoogleAuthProvider,
-//   getAuth,
-//   signInWithPopup,
-//   createUserWithEmailAndPassword,
-//   signInWithEmailAndPassword,
-//   onAuthStateChanged,
-//   sendPasswordResetEmail,
-//   signOut,
-// } from "@firebase/auth";
+import {
+  GoogleAuthProvider,
+  getAuth,
+  signInWithPopup,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signOut,
+} from "@firebase/auth";
 import logo from "../components/Logo.png";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
@@ -43,21 +42,21 @@ export const Login = () => {
   const [registerPassword, setRegisterPassword] = useState("");
   const [user, setUser] = useState();
 
-  // onAuthStateChanged(auth, (currentUser) => {
-  //   setUser(currentUser);
-  // });
-  // const register = async () => {
-  //   try {
-  //     const user = await createUserWithEmailAndPassword(
-  //       auth,
-  //       registerEmail,
-  //       registerPassword
-  //     );
-  //     console.log(user);
-  //   } catch (e) {
-  //     console.log(e.message);
-  //   }
-  // };
+  onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser);
+  });
+  const register = async () => {
+    try {
+      const user = await createUserWithEmailAndPassword(
+        auth,
+        registerEmail,
+        registerPassword
+      );
+      console.log(user);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
   const login = async () => {
     try {
       const user = await signInWithEmailAndPassword(
