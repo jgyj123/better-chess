@@ -29,7 +29,7 @@ const StatsBoard = () => {
   return (
     <VStack
       divider={<StackDivider />}
-      w="50%"
+      w="100%"
       borderColor="black"
       borderWidth="2px"
       shadow="lg"
@@ -49,10 +49,18 @@ const StatsBoard = () => {
         <Text>{userData.name}</Text>
       </HStack>
       <HStack w="100%">
-        <Text>Rating: {userData.rating}</Text>
-        <Text>Coins: {userData.coins}</Text>
-        <Text>Wins: {userData.wins}</Text>
-        <Text>Losses: {userData.losses}</Text>
+        <Text>
+          <strong>Rating:</strong> {userData.rating}
+        </Text>
+        <Text>
+          <strong>Coins:</strong> {userData.coins}
+        </Text>
+        <Text>
+          <strong>Wins:</strong> {userData.wins}
+        </Text>
+        <Text>
+          <strong>Losses:</strong> {userData.losses}
+        </Text>
       </HStack>
     </VStack>
   );
