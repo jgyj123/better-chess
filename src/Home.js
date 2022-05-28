@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Flex,
   Button,
   Checkbox,
   Container,
@@ -25,11 +26,11 @@ const Home = (props) => {
   return (
     <Box w="100vw">
       <NavBar w="100%" user={props.user} useSignIn={props.signIn} />
-      <HStack gap={4}>
+      <Flex gap={4}>
         <JoinGameButtons />
         <MessageBoard />
         <OnlinePlayers />
-      </HStack>
+      </Flex>
     </Box>
   );
 };

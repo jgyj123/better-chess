@@ -23,7 +23,7 @@ const MessageBoard = () => {
     );
   }, []);
   return (
-    <VStack w="50%">
+    <VStack w="50%" overflow="scroll" height="100vh">
       <StatsBoard />
       <AddPost />
       {posts.map((post) => {

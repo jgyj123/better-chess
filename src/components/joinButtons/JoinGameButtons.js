@@ -5,8 +5,8 @@ import { Button } from "@chakra-ui/react";
 
 const JoinGameButtons = () => {
   return (
-    <VStack w="20%">
-      <Button w="80%" size="lg" p="4px;" colorScheme="blue">
+    <VStack w="25%" bg="white">
+      <Button w="80%" size="lg" p="4px;" colorScheme="blue" marginTop={10}>
         <Link to="/game"> CREATE GAME</Link>
       </Button>
       <Button w="80%" size="lg" p="4px;" colorScheme="blue">

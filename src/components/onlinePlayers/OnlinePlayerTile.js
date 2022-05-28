@@ -17,12 +17,15 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
+  Avatar,
 } from "@chakra-ui/react";
-const OnlinePlayerTile = () => {
+const OnlinePlayerTile = (props) => {
   return (
-    <Flex w="100%" alignItems="center" justifyContent="center">
-      <BsFillPersonFill />
-      <Box>username</Box>
+    <Flex w="100%" alignItems="center" justifyContent="space-evenly">
+      <Avatar />
+      <Text marginLeft="10px" w="40%">
+        {props.displayName}
+      </Text>
       <Button colorScheme="teal" size="xs" marginLeft="3">
         <GiBroadsword />
       </Button>
