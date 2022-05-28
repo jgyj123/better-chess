@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Flex,
-  Text,
-  IconButton,
-  Button,
-  Stack,
-  useColorModeValue,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { Box, Flex, useColorModeValue, useDisclosure } from "@chakra-ui/react";
 import { DesktopNav } from "./DesktopNav";
 import { auth } from "../../firebase";
 import ButtonGroup from "./ButtonGroup";
@@ -34,13 +23,6 @@ export default function Navbar(props) {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          {/* <Text
-            textAlign={useBreakpointValue({ base: "center", md: "left" })}
-            fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
-          >
-            Logo
-          </Text> */}
           <Link to="/">
             <img src={logo} height="32px" width="32px" alt="logo" />
           </Link>

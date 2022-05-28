@@ -34,9 +34,10 @@ const StatsBoard = () => {
       borderWidth="2px"
       shadow="lg"
       p="4"
-      marginBottom="30px"
+      marginTop="30px"
       bg="white"
       roundedTop="lg"
+      roundedBottom="lg"
     >
       <HStack w="100%">
         {auth.currentUser.photoURL ? (

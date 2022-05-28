@@ -9,6 +9,7 @@ import Home from "./Home";
 import SignupCard from "./login/SignUp";
 import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/Navbar/Navbar";
+import Puzzle from "./puzzles/Puzzle";
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
                 </PrivateRoute>
               }
             ></Route>
+            <Route exact path="/puzzles" element={<Puzzle />}></Route>
             <Route exact path="/signUp" element={<SignupCard />}></Route>
           </Routes>
         </Router>

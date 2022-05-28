@@ -81,7 +81,7 @@ const NAV_ITEMS = [
       {
         label: "Standard",
         subLabel: "Try your hand at puzzles based on ELO",
-        href: "#",
+        href: "/puzzles",
       },
       {
         label: "Statistics",

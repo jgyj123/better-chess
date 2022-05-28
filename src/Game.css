@@ -5,10 +5,9 @@
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  width: 100vw;
-  height: 100vh;
 }
 .board {
   border: 2px solid black;
   height: 700px;
+  margin-top: 64px;
 }
