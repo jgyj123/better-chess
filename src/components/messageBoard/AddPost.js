@@ -20,6 +20,7 @@ import {
 import { auth } from "../../firebase";
 import { db } from "../../firebase";
 import { serverTimestamp } from "firebase/firestore";
+import { right } from "@popperjs/core";
 const AddPost = (props) => {
   const [userData, setUserData] = useState([]);
   useEffect(() => {
@@ -46,14 +47,7 @@ const AddPost = (props) => {
     setMessage("");
   };
   return (
-    <Box
-      w="100%"
-      bg="white"
-      shadow="lg"
-      p={4}
-      position="relative"
-      height="100px;"
-    >
+    <Box w="100%" bg="white" shadow="lg" p={4} position="relative">
       <Flex align="center">
         <Avatar src={auth.currentUser.photoURL}></Avatar>
         <Input
@@ -65,16 +59,11 @@ const AddPost = (props) => {
           }}
         ></Input>
       </Flex>
-      <Button
-        position="absolute"
-        right={2}
-        bottom={2}
-        padding="10px;"
-        size="xs"
-        onClick={submitPost}
-      >
-        Post
-      </Button>
+      <Box w="100%;">
+        <Button padding="10px;" size="xs" onClick={submitPost} float="right">
+          Post
+        </Button>
+      </Box>
     </Box>
   );
 };
