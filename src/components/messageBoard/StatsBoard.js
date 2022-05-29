@@ -43,7 +43,11 @@ const StatsBoard = () => {
         {auth.currentUser.photoURL ? (
           <Image src={auth.currentUser.photoURL}></Image>
         ) : (
-          <BsFillPersonFill />
+          <Image
+            boxSize="100px"
+            src="/25541.jpg"
+            border="1px solid black"
+          ></Image>
         )}
 
         <Text>{userData.name}</Text>

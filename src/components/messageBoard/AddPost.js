@@ -37,19 +37,26 @@ const AddPost = (props) => {
   const submitPost = () => {
     const newDate = Date.now();
     const username = userData.name;
+    const pic = auth.currentUser.photoURL
+      ? auth.currentUser.photoURL
+      : "/25541.jpg";
     addDoc(collection(db, "posts"), {
       club: "Chess Masters",
       date: serverTimestamp(),
       message: message,
       username: username,
-      profilePic: auth.currentUser.photoURL,
+      profilePic: pic,
     });
     setMessage("");
   };
   return (
     <Box w="100%" bg="white" shadow="lg" p={4} position="relative">
       <Flex align="center">
-        <Avatar src={auth.currentUser.photoURL}></Avatar>
+        <Avatar
+          src={
+            auth.currentUser.photoURL ? auth.currentUser.photoURL : "/25541.jpg"
+          }
+        ></Avatar>
         <Input
           placeholder="Say something to your friends!"
           ml={4}
