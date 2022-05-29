@@ -32,7 +32,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const googleProvider = new GoogleAuthProvider();
 const onAuthStateChanged =
   (auth,
@@ -59,6 +58,12 @@ const signInWithGoogle = async () => {
         name: user.displayName,
         authProvider: "google",
         email: user.email,
+        wins: 0,
+        losses: 0,
+        clubCount: 0,
+        coins: 2000,
+        rating: 1000,
+        profilePic: auth.currentUser.photoURL,
       });
     }
   } catch (err) {
@@ -83,6 +88,11 @@ const registerWithEmailAndPassword = async (name, email, password) => {
       name,
       authProvider: "local",
       email,
+      wins: 0,
+      losses: 0,
+      clubCount: 0,
+      coins: 2000,
+      rating: 1000,
     });
   } catch (err) {
     console.error(err);

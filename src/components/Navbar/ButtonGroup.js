@@ -1,7 +1,9 @@
 import React from "react";
-import { Button, Stack, Avatar } from "@chakra-ui/react";
+import { Button, Stack, Avatar, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { auth } from "../../firebase";
+import { logout } from "../../firebase";
+import { BiLogOut } from "react-icons/bi";
 
 export default function ButtonGroup(props) {
   return props.user == null ? (
@@ -36,8 +38,15 @@ export default function ButtonGroup(props) {
       </Button>
     </Stack>
   ) : (
-    <Link to="/">
-      <Avatar name={props.user.displayName} src={props.user.photoURL} />
-    </Link>
+    <Flex alignItems="center">
+      <Link to="/login">
+        <Button onClick={logout}>
+          <BiLogOut />{" "}
+        </Button>
+      </Link>
+      <Link to="/">
+        <Avatar name={props.user.displayName} src={props.user.photoURL} />
+      </Link>
+    </Flex>
   );
 }
