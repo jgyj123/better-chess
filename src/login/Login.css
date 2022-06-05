@@ -1,11 +1,27 @@
+Container {
+  margin: 100px auto;
+}
+
 .container {
   display: flex;
   justify-content: center;
-  flex-direction: column;
+  flex-direction: row;
+}
+
+.logo-container {
+  flex: 0.7;
+  text-align: center;
+  margin-left: 200px;
 }
 
 .logo {
   align-self: center;
-  margin-top: 40px;
-  margin-bottom: -60px;
+  width: 20em;
+  margin: auto;
+  flex: 1;
+}
+
+.logo-text {
+  font-size: 2.5em;
+  margin: auto;
 }

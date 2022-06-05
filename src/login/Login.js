@@ -95,13 +95,16 @@ export const Login = () => {
   const navigate = useNavigate();
   return (
     <div className="container">
-      <img
-        className="logo"
-        src={logo}
-        height="128px"
-        width="128px"
-        alt="Logo"
-      />
+      <div className="logo-container">
+        <img
+          className="logo"
+          src={logo}
+          height="128px"
+          width="128px"
+          alt="Logo"
+        />
+        <p className="logo-text">BetterChess</p>
+      </div>
       <Container
         maxW="lg"
         py={{
