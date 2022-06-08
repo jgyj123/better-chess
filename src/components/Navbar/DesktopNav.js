@@ -23,7 +23,7 @@ export const DesktopNav = () => {
             <PopoverTrigger>
               <Link
                 p={2}
-                href={navItem.href ?? "#"}
+                to={navItem.href ?? "#"}
                 fontSize={"sm"}
                 fontWeight={500}
                 color={linkColor}
@@ -71,7 +71,7 @@ const NAV_ITEMS = [
       {
         label: "Find a Club",
         subLabel: "Search for a community",
-        href: "#",
+        href: "/joinClub",
       },
     ],
   },

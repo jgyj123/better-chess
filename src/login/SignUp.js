@@ -14,12 +14,11 @@ import {
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
-import { registerWithEmailAndPassword } from "../firebase";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Link as ReachLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import { useUserAuth } from "../authProvider";
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [registerEmail, setRegisterEmail] = useState("");
@@ -27,6 +26,7 @@ export default function SignupCard() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const navigate = useNavigate("/");
+  const { registerWithEmailAndPassword } = useUserAuth();
   const createUser = () => {
     registerWithEmailAndPassword(
       firstName + " " + lastName,

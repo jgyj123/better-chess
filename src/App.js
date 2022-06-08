@@ -12,14 +12,17 @@ import Navbar from "./components/Navbar/Navbar";
 import Puzzle from "./puzzles/Puzzle";
 import { Navigate } from "react-router-dom";
 import { auth } from "./firebase";
+import JoinClub from "./components/JoinClub/joinClub";
+import { AuthProvider } from "./authProvider";
 
 const App = () => {
   const signIn = () => {
     Navigate("/login");
   };
+
   return (
     <ChakraProvider resetCSS theme={myTheme}>
-      <div>
+      <AuthProvider>
         <Router>
           <Routes>
             <Route
@@ -42,6 +45,7 @@ const App = () => {
                 </PrivateRoute>
               }
             ></Route>
+            <Route exact path="/joinClub" element={<JoinClub />}></Route>
             <Route
               exact
               path="/puzzles"
@@ -50,7 +54,7 @@ const App = () => {
             <Route exact path="/signUp" element={<SignupCard />}></Route>
           </Routes>
         </Router>
-      </div>
+      </AuthProvider>
     </ChakraProvider>
   );
 };
