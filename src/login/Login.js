@@ -17,23 +17,12 @@ import {
 import React, { useState } from "react";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
-import {
-  auth,
-  signInWithEmailAndPassword,
-  signInWithGoogle,
-} from "../firebase";
-import {
-  GoogleAuthProvider,
-  getAuth,
-  signInWithPopup,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-  signOut,
-} from "@firebase/auth";
+import { auth } from "../firebase";
+
 import logo from "../components/Logo.png";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
+import { useUserAuth } from "../authProvider";
 
 export const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
@@ -41,10 +30,12 @@ export const Login = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [user, setUser] = useState();
+  const {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signInWithGoogle,
+  } = useUserAuth();
 
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
   const register = async () => {
     try {
       const user = await createUserWithEmailAndPassword(

@@ -3,10 +3,11 @@ import "./ButtonGroup.css";
 import { Button, Stack, Avatar, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { auth } from "../../firebase";
-import { logout } from "../../firebase";
+import { useUserAuth } from "../../authProvider";
 import { BiLogOut } from "react-icons/bi";
 
 export default function ButtonGroup(props) {
+  const { logout } = useUserAuth();
   return auth.currentUser == null ? (
     <Stack
       flex={{ base: 1, md: 0 }}
