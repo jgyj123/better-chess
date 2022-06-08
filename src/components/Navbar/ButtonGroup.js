@@ -1,4 +1,5 @@
 import React from "react";
+import "./ButtonGroup.css";
 import { Button, Stack, Avatar, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { auth } from "../../firebase";
@@ -39,13 +40,13 @@ export default function ButtonGroup(props) {
     </Stack>
   ) : (
     <Flex alignItems="center">
-      <Link to="/login">
-        <Button onClick={logout}>
-          <BiLogOut />{" "}
-        </Button>
-      </Link>
       <Link to="/">
         <Avatar name={props.user.displayName} src={props.user.photoURL} />
+      </Link>
+      <Link to="/login">
+        <Button className="logout" onClick={logout}>
+          <BiLogOut />{" "}
+        </Button>
       </Link>
     </Flex>
   );

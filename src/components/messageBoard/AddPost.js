@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./AddPost.css";
 import {
   Input,
   VStack,
@@ -8,7 +9,18 @@ import {
   Flex,
   Select,
   Button,
+  Spacer,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
+  ButtonGroup,
 } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   onSnapshot,
   collection,
@@ -60,17 +72,30 @@ const AddPost = (props) => {
         <Input
           placeholder="Say something to your friends!"
           ml={4}
+          mr={4}
+          width="55%"
           value={message}
           onChange={(e) => {
             setMessage(e.target.value);
           }}
         ></Input>
+        <Spacer />
+        <ButtonGroup gap="1">
+          <Select placeholder="Choose a club">
+            <option value="Chess Masters">Chess Masters</option>
+            <option value="Liver Enthusiasts">Liver Enthusiasts</option>
+          </Select>
+          <Button
+            margin="auto"
+            padding="10px;"
+            size="s"
+            onClick={submitPost}
+            float="right"
+          >
+            Post
+          </Button>
+        </ButtonGroup>
       </Flex>
-      <Box w="100%;">
-        <Button padding="10px;" size="xs" onClick={submitPost} float="right">
-          Post
-        </Button>
-      </Box>
     </Box>
   );
 };
