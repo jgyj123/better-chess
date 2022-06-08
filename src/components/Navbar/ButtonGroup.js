@@ -7,7 +7,7 @@ import { logout } from "../../firebase";
 import { BiLogOut } from "react-icons/bi";
 
 export default function ButtonGroup(props) {
-  return props.user == null ? (
+  return auth.currentUser == null ? (
     <Stack
       flex={{ base: 1, md: 0 }}
       justify={"flex-end"}
@@ -41,7 +41,10 @@ export default function ButtonGroup(props) {
   ) : (
     <Flex alignItems="center">
       <Link to="/">
-        <Avatar name={props.user.displayName} src={props.user.photoURL} />
+        <Avatar
+          name={auth.currentUser.displayName}
+          src={auth.currentUser.photoURL}
+        />
       </Link>
       <Link to="/login">
         <Button className="logout" onClick={logout}>

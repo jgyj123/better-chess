@@ -29,7 +29,7 @@ export default function Navbar(props) {
             <DesktopNav />
           </Flex>
         </Flex>
-        <ButtonGroup useSignIn={props.useSignIn} user={auth.currentUser} />
+        <ButtonGroup useSignIn={props.useSignIn} />
       </Flex>
     </Box>
   );
