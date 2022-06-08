@@ -34,7 +34,11 @@ import { db } from "../../firebase";
 import { serverTimestamp } from "firebase/firestore";
 import { right } from "@popperjs/core";
 const AddPost = (props) => {
+  const [clubValue, setClubValue] = useState("");
   const [userData, setUserData] = useState([]);
+  const handleChange = (event) => {
+    setClubValue(event.target.selectedOptions[0].value);
+  };
   useEffect(() => {
     const q = query(
       collection(db, "users"),
@@ -53,7 +57,7 @@ const AddPost = (props) => {
       ? auth.currentUser.photoURL
       : "/25541.jpg";
     addDoc(collection(db, "posts"), {
-      club: "Chess Masters",
+      club: clubValue,
       date: serverTimestamp(),
       message: message,
       username: username,
@@ -81,7 +85,7 @@ const AddPost = (props) => {
         ></Input>
         <Spacer />
         <ButtonGroup gap="1">
-          <Select placeholder="Choose a club">
+          <Select placeholder="Choose a club" onChange={handleChange}>
             <option value="Chess Masters">Chess Masters</option>
             <option value="Liver Enthusiasts">Liver Enthusiasts</option>
           </Select>
