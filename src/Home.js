@@ -24,9 +24,9 @@ import JoinGameButtons from "./components/joinButtons/JoinGameButtons";
 
 const Home = (props) => {
   return (
-    <Box w="100vw">
+    <Box w="100%">
       <NavBar w="100%" useSignIn={props.signIn} />
-      <Flex gap={4}>
+      <Flex gap={6}>
         <JoinGameButtons />
         <MessageBoard />
         <OnlinePlayers />

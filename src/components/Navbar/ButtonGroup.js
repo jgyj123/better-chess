@@ -48,7 +48,7 @@ export default function ButtonGroup(props) {
         />
       </Link>
       <Link to="/login">
-        <Button className="logout" onClick={logout}>
+        <Button className="logout" onClick={logout} marginRight="0px">
           <BiLogOut />{" "}
         </Button>
       </Link>

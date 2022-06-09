@@ -7,7 +7,7 @@ export const myTheme = extendTheme({
       body: {
         fontFamily: "body",
         color: mode("gray.800", "whiteAlpha.900")(props),
-        bg: mode("#e1f5ff", "gray.800")(props),
+        bg: mode("#A7A4A0")(props),
         lineHeight: "base",
       },
     }),

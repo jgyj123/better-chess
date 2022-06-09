@@ -35,6 +35,7 @@ const StatsBoard = () => {
       shadow="lg"
       p="4"
       marginTop="30px"
+      marginBottom="10px"
       bg="white"
       roundedTop="lg"
       roundedBottom="lg"
