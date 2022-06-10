@@ -3,15 +3,7 @@ import { Box, Text, VStack } from "@chakra-ui/react";
 import StatsBoard from "./StatsBoard";
 import Post from "./Post";
 import { db } from "../../firebase";
-import {
-  onSnapshot,
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  orderBy,
-} from "firebase/firestore";
+import { onSnapshot, collection, query, orderBy } from "firebase/firestore";
 import AddPost from "./AddPost";
 
 const MessageBoard = () => {

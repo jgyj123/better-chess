@@ -2,25 +2,15 @@ import React, { useState, useEffect } from "react";
 import "./AddPost.css";
 import {
   Input,
-  VStack,
-  HStack,
   Box,
   Avatar,
   Flex,
   Select,
   Button,
   Spacer,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuItemOption,
-  MenuGroup,
-  MenuOptionGroup,
-  MenuDivider,
   ButtonGroup,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+
 import {
   onSnapshot,
   collection,

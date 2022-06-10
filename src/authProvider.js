@@ -46,6 +46,7 @@ export const AuthProvider = ({ children }) => {
           coins: 2000,
           rating: 1000,
           profilePic: auth.currentUser.photoURL,
+          clubs: [],
         });
       }
     } catch (err) {
@@ -75,6 +76,7 @@ export const AuthProvider = ({ children }) => {
         clubCount: 0,
         coins: 2000,
         rating: 1000,
+        clubs: [],
       });
     } catch (err) {
       console.error(err);
