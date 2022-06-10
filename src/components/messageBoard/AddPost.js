@@ -15,6 +15,8 @@ import {
   onSnapshot,
   collection,
   query,
+  doc,
+  getDoc,
   where,
   getDocs,
   addDoc,
@@ -26,6 +28,7 @@ import { right } from "@popperjs/core";
 const AddPost = (props) => {
   const [clubValue, setClubValue] = useState("");
   const [userData, setUserData] = useState([]);
+  const [clubData, setClubData] = useState([]);
   const handleChange = (event) => {
     setClubValue(event.target.selectedOptions[0].value);
   };
@@ -52,9 +55,11 @@ const AddPost = (props) => {
       message: message,
       username: username,
       profilePic: pic,
+      clubId: props.currentClub,
     });
     setMessage("");
   };
+
   return (
     <Box w="100%" bg="white" shadow="lg" p={4} position="relative">
       <Flex align="center">
@@ -76,8 +81,9 @@ const AddPost = (props) => {
         <Spacer />
         <ButtonGroup gap="1">
           <Select placeholder="Choose a club" onChange={handleChange}>
-            <option value="Chess Masters">Chess Masters</option>
-            <option value="Liver Enthusiasts">Liver Enthusiasts</option>
+            {props.clubs.map((club) => {
+              return <option value={club.id}>{club.name}</option>;
+            })}
           </Select>
           <Button
             margin="auto"
