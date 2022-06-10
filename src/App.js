@@ -12,7 +12,7 @@ import Navbar from "./components/Navbar/Navbar";
 import Puzzle from "./puzzles/Puzzle";
 import { Navigate } from "react-router-dom";
 import { auth } from "./firebase";
-import JoinClub from "./components/JoinClub/joinClub";
+import JoinClub from "./components/joinClub/joinClub";
 import { AuthProvider } from "./authProvider";
 
 const App = () => {
