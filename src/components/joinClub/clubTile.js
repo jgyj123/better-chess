@@ -20,13 +20,9 @@ const ClubTile = (props) => {
       collection(db, "users"),
       where("uid", "==", auth.currentUser.uid)
     );
-    setDisabledState(false);
-    setJoinState("Join Club");
+
     getDocs(q).then((res) => {
-      if (res.docs[0].data().clubs.includes(props.club.id)) {
-        console.log(true);
-        console.log(res.docs[0].data());
-        console.log(res.docs[0].data().clubs);
+      if (res.docs[0].data().clubIds.includes(props.club.id)) {
         setJoinState("Joined");
         setDisabledState(true);
       }
@@ -42,7 +38,10 @@ const ClubTile = (props) => {
       const ref = doc(db, "users", id);
       setJoinState("Joined");
       setDisabledState(true);
-      updateDoc(ref, { clubs: arrayUnion(props.club.id) });
+      updateDoc(ref, {
+        clubIds: arrayUnion(props.club.id),
+        clubs: arrayUnion({ id: props.club.id, name: props.club.name }),
+      });
     });
   };
   return (
