@@ -27,7 +27,7 @@ const CreateClub = () => {
     setClubName("");
   };
   return (
-    <Box bg="white" shadow="lg" w="600px" height="400px;" margin="auto">
+    <Box bg="white" shadow="lg" w="600px" height="330px;" margin="auto">
       <Text textAlign="center" fontSize="40px;">
         Create a club!
       </Text>
@@ -60,7 +60,7 @@ const CreateClub = () => {
           }}
         />
       </FormControl>
-      <Button float="right" onClick={createNewClub}>
+      <Button marginLeft={"3%"} width="94%" onClick={createNewClub}>
         Create
       </Button>
     </Box>
