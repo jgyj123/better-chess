@@ -11,20 +11,20 @@ import {
 import { DesktopSubNav } from "./DesktopSubNav";
 
 export const DesktopNav = () => {
-  const linkColor = useColorModeValue("gray.600", "gray.200");
-  const linkHoverColor = useColorModeValue("gray.800", "white");
+  const linkColor = "#ffffff";
+  const linkHoverColor = "#F15412";
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label}>
+        <Box key={navItem.label} alignSelf="center">
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Link
                 p={2}
                 to={navItem.href ?? "#"}
-                fontSize={"sm"}
+                fontSize={"lg"}
                 fontWeight={500}
                 color={linkColor}
                 _hover={{
@@ -66,7 +66,7 @@ const NAV_ITEMS = [
       {
         label: "Posts and Announcements",
         subLabel: "See all club posts and announcements",
-        href: "#",
+        href: "/",
       },
       {
         label: "Find a Club",

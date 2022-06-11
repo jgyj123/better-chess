@@ -45,7 +45,7 @@ const MessageBoard = () => {
     console.log(clubId);
   };
   return (
-    <VStack w="50%" overflow="scroll" height="100vh">
+    <VStack w="50%" overflowY="scroll" height="100vh" paddingRight="10px">
       <StatsBoard />
       <AddPost currentClub={selectedClub} clubs={userClubsIds} />
       {posts.map((post) => {

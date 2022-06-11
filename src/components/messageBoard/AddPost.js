@@ -44,7 +44,6 @@ const AddPost = (props) => {
   }, []);
   const [message, setMessage] = useState("");
   const submitPost = () => {
-    const newDate = Date.now();
     const username = userData.name;
     const pic = auth.currentUser.photoURL
       ? auth.currentUser.photoURL
