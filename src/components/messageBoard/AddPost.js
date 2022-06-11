@@ -24,13 +24,11 @@ import {
 import { auth } from "../../firebase";
 import { db } from "../../firebase";
 import { serverTimestamp } from "firebase/firestore";
-import { right } from "@popperjs/core";
 const AddPost = (props) => {
   const [clubValue, setClubValue] = useState("");
   const [userData, setUserData] = useState([]);
-  const [clubData, setClubData] = useState([]);
   const handleChange = (event) => {
-    setClubValue(event.target.selectedOptions[0].value);
+    props.setCurrentClub(event.target.selectedOptions[0].value);
   };
   useEffect(() => {
     const q = query(
@@ -44,19 +42,21 @@ const AddPost = (props) => {
   }, []);
   const [message, setMessage] = useState("");
   const submitPost = () => {
-    const username = userData.name;
-    const pic = auth.currentUser.photoURL
-      ? auth.currentUser.photoURL
-      : "/25541.jpg";
-    addDoc(collection(db, "posts"), {
-      club: clubValue,
-      date: serverTimestamp(),
-      message: message,
-      username: username,
-      profilePic: pic,
-      clubId: props.currentClub,
-    });
-    setMessage("");
+    if (message !== "") {
+      const username = userData.name;
+      const pic = auth.currentUser.photoURL
+        ? auth.currentUser.photoURL
+        : "/25541.jpg";
+      addDoc(collection(db, "posts"), {
+        club: props.currentClub,
+        date: serverTimestamp(),
+        message: message,
+        username: username,
+        profilePic: pic,
+        clubId: props.currentClub,
+      });
+      setMessage("");
+    }
   };
 
   return (
@@ -80,9 +80,13 @@ const AddPost = (props) => {
         <Spacer />
         <ButtonGroup gap="1">
           <Select placeholder="Choose a club" onChange={handleChange}>
-            {props.clubs.map((club) => {
-              return <option value={club.id}>{club.name}</option>;
-            })}
+            {props.clubs != null ? (
+              props.clubs.map((club) => {
+                return <option value={club.id}>{club.name}</option>;
+              })
+            ) : (
+              <div></div>
+            )}
           </Select>
           <Button
             margin="auto"
