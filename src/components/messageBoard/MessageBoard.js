@@ -24,12 +24,8 @@ const MessageBoard = () => {
   useEffect(() => {
     const queryPosts = query(
       collection(db, "posts"),
-<<<<<<< Updated upstream
       orderBy("date", "desc"),
       where("clubId", "==", selectedClub == null ? "general" : selectedClub)
-=======
-      where("clubId", "==", selectedClub)
->>>>>>> Stashed changes
     );
     onSnapshot(queryPosts, (snapshot) => {
       setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -71,13 +67,9 @@ const MessageBoard = () => {
       <StatsBoard />
       <AddPost
         currentClub={selectedClub}
-<<<<<<< Updated upstream
         setCurrentClub={setSelectedClub}
         clubs={userClubsIds}
-=======
-        clubs={userClubsIds}
         handleChange={(item) => toggleMessageBoard(item)}
->>>>>>> Stashed changes
       />
       {posts.map((post) => {
         return (

@@ -7,6 +7,8 @@ import {
   Button,
   Image,
   HStack,
+  LinkBox,
+  LinkOverlay,
 } from "@chakra-ui/react";
 import {
   collection,
@@ -19,10 +21,43 @@ import {
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { auth } from "../../firebase";
+import "./clubTile.css";
 
 const ClubTile = (props) => {
   const [joinState, setJoinState] = useState("Join Club");
   const [disabledState, setDisabledState] = useState(false);
+  const ANIMATEDCLASSNAME = "animated";
+  const ELEMENTS = document.querySelectorAll(".HOVER");
+  const ELEMENTS_SPAN = [];
+
+  ELEMENTS.forEach((element, index) => {
+    let addAnimation = false;
+    // Elements that contain the "FLASH" class, add a listener to remove
+    // animation-class when the animation ends
+    if (element.classList[1] === "FLASH") {
+      element.addEventListener("animationend", (e) => {
+        element.classList.remove(ANIMATEDCLASSNAME);
+      });
+      addAnimation = true;
+    }
+
+    // If The span element for this element does not exist in the array, add it.
+    if (!ELEMENTS_SPAN[index])
+      ELEMENTS_SPAN[index] = element.querySelector("span");
+
+    element.addEventListener("mouseover", (e) => {
+      ELEMENTS_SPAN[index].style.left = e.pageX - element.offsetLeft + "px";
+      ELEMENTS_SPAN[index].style.top = e.pageY - element.offsetTop + "px";
+
+      // Add an animation-class to animate via CSS.
+      if (addAnimation) element.classList.add(ANIMATEDCLASSNAME);
+    });
+
+    element.addEventListener("mouseout", (e) => {
+      ELEMENTS_SPAN[index].style.left = e.pageX - element.offsetLeft + "px";
+      ELEMENTS_SPAN[index].style.top = e.pageY - element.offsetTop + "px";
+    });
+  });
   useEffect(() => {
     const q = query(
       collection(db, "users"),
@@ -54,37 +89,47 @@ const ClubTile = (props) => {
     const q2 = query(collection(db, "clubs"), where("id", "==", props.club.id));
   };
   return (
-    <Flex w="600px;" bg="white" shadow="lg" position="relative" m="10px">
-      <Image src="/team.png" boxSize="200px;" p="2" />
-      <Flex height="200px" direction="column" justifyContent="center">
+    <LinkBox
+      width="600px"
+      height="200"
+      bg="white"
+      shadow="lg"
+      m="10px"
+      borderWidth="1px"
+      rounded="md"
+      className="HOVER"
+    >
+      <LinkOverlay href="#">
         <HStack>
-          <strong>Name: </strong>
-          <p>{props.club.name}</p>
+          <img src="/team.png" width="200px;" p="2" alt="club icon" />
+          <Flex direction="column" justifyContent="center">
+            <HStack>
+              <strong>Name: </strong>
+              <p>{props.club.name}</p>
+            </HStack>
+            <HStack>
+              <strong>No. of members: </strong>
+              <p>{props.club.memberCount}</p>
+            </HStack>
+            <HStack>
+              <strong>Team location: </strong>
+              <p>{props.club.location}</p>
+            </HStack>
+          </Flex>
         </HStack>
-        <HStack>
-          <strong>No. of members: </strong>
-          <p>{props.club.memberCount}</p>
-        </HStack>
-        <HStack>
-          <strong>Description: </strong>
-          <p>{props.club.description}</p>
-        </HStack>
-        <HStack>
-          <strong>Team location: </strong>
-          <p>{props.club.location}</p>
-        </HStack>
-      </Flex>
-      <Button
-        id={props.club.id}
-        position="absolute"
-        right="10px;"
-        bottom="10px"
-        onClick={() => joinExisitingClub(props.club.id)}
-        disabled={disabledState}
-      >
-        {joinState}
-      </Button>
-    </Flex>
+        <Button
+          id={props.club.id}
+          position="absolute"
+          right="10px;"
+          bottom="10px"
+          onClick={() => joinExisitingClub(props.club.id)}
+          disabled={disabledState}
+        >
+          {joinState}
+        </Button>
+        <span></span>
+      </LinkOverlay>
+    </LinkBox>
   );
 };
 

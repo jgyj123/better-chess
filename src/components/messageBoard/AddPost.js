@@ -28,12 +28,9 @@ const AddPost = (props) => {
   const [clubValue, setClubValue] = useState("");
   const [userData, setUserData] = useState([]);
   const handleChange = (event) => {
-<<<<<<< Updated upstream
     props.setCurrentClub(event.target.selectedOptions[0].value);
-=======
     setClubValue(event.target.selectedOptions[0].value);
     props.handleChange(event.target.value);
->>>>>>> Stashed changes
   };
   useEffect(() => {
     const q = query(
