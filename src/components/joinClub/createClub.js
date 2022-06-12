@@ -8,23 +8,31 @@ import {
   Input,
   Button,
   VStack,
+  HStack,
 } from "@chakra-ui/react";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, setDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 const CreateClub = () => {
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [clubLocation, setClubLocation] = useState("");
   const createNewClub = () => {
-    addDoc(collection(db, "clubs"), {
-      name: clubName,
-      location: clubLocation,
-      memberCount: 0,
-      description: clubDescription,
-    });
-    setClubDescription("");
-    setClubLocation("");
-    setClubName("");
+    if (clubName !== "" && clubLocation !== "") {
+      addDoc(collection(db, "clubs"), {
+        name: clubName,
+        location: clubLocation,
+        memberCount: 0,
+        description: clubDescription,
+        clubId: "",
+      }).then((res) => {
+        let docId = res.id;
+        let docRef = doc(db, "clubs/" + docId);
+        updateDoc(docRef, { clubId: docRef.id });
+      });
+      setClubDescription("");
+      setClubLocation("");
+      setClubName("");
+    }
   };
   return (
     <Box bg="white" shadow="lg" w="600px" height="330px;" margin="auto">

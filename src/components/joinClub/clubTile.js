@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Text, Flex, VStack, Box, Button, Image } from "@chakra-ui/react";
+import {
+  Text,
+  Flex,
+  VStack,
+  Box,
+  Button,
+  Image,
+  HStack,
+} from "@chakra-ui/react";
 import {
   collection,
   query,
@@ -43,28 +51,28 @@ const ClubTile = (props) => {
         clubs: arrayUnion({ id: props.club.id, name: props.club.name }),
       });
     });
+    const q2 = query(collection(db, "clubs"), where("id", "==", props.club.id));
   };
   return (
     <Flex w="600px;" bg="white" shadow="lg" position="relative" m="10px">
       <Image src="/team.png" boxSize="200px;" p="2" />
       <Flex height="200px" direction="column" justifyContent="center">
-        <Flex>
-          <strong>Team:</strong>
-
+        <HStack>
+          <strong>Name: </strong>
           <p>{props.club.name}</p>
-        </Flex>
-        <Flex>
-          <strong>No. of members:</strong>
+        </HStack>
+        <HStack>
+          <strong>No. of members: </strong>
           <p>{props.club.memberCount}</p>
-        </Flex>
-        <Flex>
-          <strong>Description:</strong>
+        </HStack>
+        <HStack>
+          <strong>Description: </strong>
           <p>{props.club.description}</p>
-        </Flex>
-        <Flex>
-          <strong>Team location:</strong>
+        </HStack>
+        <HStack>
+          <strong>Team location: </strong>
           <p>{props.club.location}</p>
-        </Flex>
+        </HStack>
       </Flex>
       <Button
         id={props.club.id}
