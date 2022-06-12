@@ -18,18 +18,22 @@ import AddPost from "./AddPost";
 
 const MessageBoard = () => {
   const [posts, setPosts] = useState([]);
-  const [selectedClub, setSelectedClub] = useState([]);
+  const [selectedClub, setSelectedClub] = useState("general");
   const [userClubsIds, setUserClubsIds] = useState([]);
-  const [userClubData, setUserClubData] = useState([]);
+  const [currentListener, setCurrentListener] = useState(() => {});
   useEffect(() => {
     const queryPosts = query(
       collection(db, "posts"),
-      orderBy("date", "desc"),
-      where("clubId", "==", selectedClub == null ? "general" : selectedClub)
+
+      where("clubId", "==", selectedClub)
+
+    
     );
-    onSnapshot(queryPosts, (snapshot) => {
+    const unsubscribe = onSnapshot(queryPosts, (snapshot) => {
       setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
+    setCurrentListener(() => unsubscribe);
+
     const queryUsers = query(
       collection(db, "users"),
       where("uid", "==", auth.currentUser.uid)
@@ -38,15 +42,15 @@ const MessageBoard = () => {
       const currentClubs = res.docs[0].data().clubs;
       setUserClubsIds(currentClubs);
     });
-    console.log(posts);
   }, []);
-  const getPosts = () => {
-    const posts = query(
-      collection(db, "posts"),
-      where("clubId", "==", selectedClub)
-    );
-    onSnapshot(posts, (snapshot) =>
-      setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+  const getPosts = (clubId) => {
+    currentListener();
+    const posts = query(collection(db, "posts"), where("clubId", "==", clubId));
+    console.log("setting... " + clubId);
+    setCurrentListener(() =>
+      onSnapshot(posts, (snapshot) =>
+        setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      )
     );
     const q = query(
       collection(db, "users"),

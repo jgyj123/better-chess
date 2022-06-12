@@ -9,6 +9,7 @@ import {
   Button,
   Spacer,
   ButtonGroup,
+  Text,
 } from "@chakra-ui/react";
 
 import {
