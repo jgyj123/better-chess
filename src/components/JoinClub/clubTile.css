@@ -1,0 +1,68 @@
+@keyframes shake {
+  25% {
+    transform: rotate(calc(var(--angle) * -1));
+  }
+
+  50% {
+    transform: rotate(var(--angle));
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.HOVER img {
+  position: relative;
+  z-index: 9;
+}
+
+.HOVER Button {
+  z-index: 10;
+}
+
+.HOVER {
+  --width: 100%;
+  --time: 0.7s;
+  background: #f15412;
+  overflow: hidden;
+}
+
+.HOVER p,
+strong {
+  position: relative;
+  z-index: 5;
+  transition: color var(--time);
+}
+
+.HOVER:hover p,
+.HOVER:hover strong {
+  color: #f15412;
+}
+
+.HOVER span {
+  position: absolute;
+  display: block;
+  content: "";
+  z-index: 0;
+  width: 0;
+  height: 0;
+
+  border-radius: 100%;
+  background: black;
+  transform: translate(-50%, -50%);
+  transition: width var(--time), padding-top var(--time);
+}
+
+.HOVER:hover span {
+  width: calc(var(--width) * 2.25);
+  padding-top: calc(var(--width) * 2.25);
+}
+
+.link {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+
+  font-size: 1rem;
+}

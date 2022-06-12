@@ -24,7 +24,10 @@ const MessageBoard = () => {
   useEffect(() => {
     const queryPosts = query(
       collection(db, "posts"),
+
       where("clubId", "==", selectedClub)
+
+    
     );
     const unsubscribe = onSnapshot(queryPosts, (snapshot) => {
       setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
