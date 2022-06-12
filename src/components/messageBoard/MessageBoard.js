@@ -19,15 +19,13 @@ import AddPost from "./AddPost";
 const MessageBoard = () => {
   const [posts, setPosts] = useState([]);
   const [selectedClub, setSelectedClub] = useState("general");
-  const [userClubsIds, setUserClubsIds] = useState([]);
+  const [userClubs, setUserClubs] = useState([]);
   const [currentListener, setCurrentListener] = useState(() => {});
   useEffect(() => {
     const queryPosts = query(
       collection(db, "posts"),
-
-      where("clubId", "==", selectedClub)
-
-    
+      where("clubId", "==", selectedClub),
+      orderBy("date", "desc")
     );
     const unsubscribe = onSnapshot(queryPosts, (snapshot) => {
       setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -40,13 +38,16 @@ const MessageBoard = () => {
     );
     getDocs(queryUsers).then((res) => {
       const currentClubs = res.docs[0].data().clubs;
-      setUserClubsIds(currentClubs);
+      setUserClubs(currentClubs);
     });
   }, []);
   const getPosts = (clubId) => {
     currentListener();
-    const posts = query(collection(db, "posts"), where("clubId", "==", clubId));
-    console.log("setting... " + clubId);
+    const posts = query(
+      collection(db, "posts"),
+      where("clubId", "==", clubId),
+      orderBy("date", "desc")
+    );
     setCurrentListener(() =>
       onSnapshot(posts, (snapshot) =>
         setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
@@ -58,7 +59,7 @@ const MessageBoard = () => {
     );
     getDocs(q).then((res) => {
       const currentClubs = res.docs[0].data().clubs;
-      setUserClubsIds(currentClubs);
+      setUserClubs(currentClubs);
     });
   };
 
@@ -67,12 +68,23 @@ const MessageBoard = () => {
     getPosts(clubId);
   };
   return (
-    <VStack w="50%" overflowY="scroll" height="100vh" paddingRight="10px">
+    <VStack
+      w="50%"
+      overflowY="scroll"
+      height="100vh"
+      paddingRight="10px"
+      minWidth="400px"
+    >
       <StatsBoard />
       <AddPost
+        name={
+          userClubs.find((x) => x.id == selectedClub)?.name
+            ? userClubs.find((x) => x.id == selectedClub)?.name
+            : "General"
+        }
         currentClub={selectedClub}
         setCurrentClub={setSelectedClub}
-        clubs={userClubsIds}
+        clubs={userClubs}
         handleChange={(item) => toggleMessageBoard(item)}
       />
       {posts.map((post) => {

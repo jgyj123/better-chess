@@ -10,6 +10,7 @@ import {
   LinkBox,
   LinkOverlay,
 } from "@chakra-ui/react";
+import { increment } from "firebase/firestore";
 import {
   collection,
   query,
@@ -81,6 +82,10 @@ const ClubTile = (props) => {
       const ref = doc(db, "users", id);
       setJoinState("Joined");
       setDisabledState(true);
+      const clubRef = doc(db, "clubs", props.club.id);
+      updateDoc(clubRef, {
+        memberCount: increment(1),
+      });
       updateDoc(ref, {
         clubIds: arrayUnion(props.club.id),
         clubs: arrayUnion({ id: props.club.id, name: props.club.name }),
