@@ -30,7 +30,7 @@ const Post = (props) => {
 
           <HStack bg="gray.100" marginLeft="auto">
             <FaChessKing />
-            <Text>{props.club}</Text>
+            <Text>{props.club.name}</Text>
           </HStack>
         </Flex>
         <Text w="100%" textAlign="left">
