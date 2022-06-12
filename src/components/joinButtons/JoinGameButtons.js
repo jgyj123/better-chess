@@ -5,7 +5,7 @@ import { Button } from "@chakra-ui/react";
 
 const JoinGameButtons = () => {
   return (
-    <VStack w="25%" bg="#615D56">
+    <VStack w="25%" bg="#615D56" minWidth="300px">
       <Button
         w="80%"
         size="lg"

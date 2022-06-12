@@ -26,11 +26,9 @@ import { auth } from "../../firebase";
 import { db } from "../../firebase";
 import { serverTimestamp } from "firebase/firestore";
 const AddPost = (props) => {
-  const [clubValue, setClubValue] = useState("");
   const [userData, setUserData] = useState([]);
   const handleChange = (event) => {
     props.setCurrentClub(event.target.selectedOptions[0].value);
-    setClubValue(event.target.selectedOptions[0].value);
     props.handleChange(event.target.value);
   };
   useEffect(() => {
@@ -51,7 +49,7 @@ const AddPost = (props) => {
         ? auth.currentUser.photoURL
         : "/25541.jpg";
       addDoc(collection(db, "posts"), {
-        club: props.currentClub,
+        club: props.name,
         date: serverTimestamp(),
         message: message,
         username: username,
@@ -83,6 +81,9 @@ const AddPost = (props) => {
         <Spacer />
         <ButtonGroup gap="1">
           <Select placeholder="Choose a club" onChange={handleChange}>
+            <option value="general" selected="selected">
+              General
+            </option>
             {props.clubs != null ? (
               props.clubs.map((club) => {
                 return <option value={club.id}>{club.name}</option>;
