@@ -70,16 +70,19 @@ const OnlinePlayers = () => {
                 getDocs(q).then((res) => {
                   const id = res.docs[0].id;
                   const userRef = doc(db, "users", id);
-                  const gameRef = ref(realTimeDb, "games/" + gameId);
+                  const gameRef = ref(realTimeDb, "games/" + gameId[0]);
                   update(gameRef, {
                     playerTwo: id,
                     playerTwoName: res.docs[0].data().name,
                   });
                   updateDoc(userRef, {
-                    currentGame: gameId,
+                    currentGame: gameId[0],
                     currentColor: "black",
                   });
-                  const challengeRef = ref(realTimeDb, "challenges/" + gameId);
+                  const challengeRef = ref(
+                    realTimeDb,
+                    "challenges/" + gameId[0]
+                  );
                   remove(challengeRef);
                   navigate("/game");
                 });
