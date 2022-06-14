@@ -5,6 +5,7 @@ import { realTimeDb } from "./firebase";
 import { update, ref, onValue } from "firebase/database";
 import { db } from "./firebase";
 import { auth } from "./firebase";
+import { BiTimer } from "react-icons/bi";
 import {
   collection,
   query,
@@ -14,7 +15,7 @@ import {
   doc,
   arrayUnion,
 } from "firebase/firestore";
-import { Box, Text, Flex, Container, calc } from "@chakra-ui/react";
+import { Box, Text, Flex, Container, calc, Center } from "@chakra-ui/react";
 
 const Game = () => {
   // takes in Game id, white/black
@@ -25,6 +26,7 @@ const Game = () => {
   const [color, setColor] = useState("white");
   const [playerOneName, setPlayerOneName] = useState("");
   const [PlayerTwoName, setPlayerTwoName] = useState("Waiting for opponent...");
+  const [pgn, setPgn] = useState("");
 
   const setWidth = ({ screenWidth, screenHeight }) => {
     return screenWidth / 2;
@@ -43,6 +45,7 @@ const Game = () => {
     });
 
     if (move == null) return;
+
     const gameRef = ref(realTimeDb, "games/" + id);
     update(gameRef, {
       fen: game.current.fen(),
@@ -61,12 +64,14 @@ const Game = () => {
       setColor(res.docs[0].data().currentColor);
       setId(newId);
       game.current = new Chess();
+
       const gameRef = ref(realTimeDb, "games/" + newId);
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
         game.current.load(data.fen);
         setFen(data.fen);
         setPlayerOneName(data.playerOneName);
+        setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
         if (data.playerTwoName != null) {
           setPlayerTwoName(data.playerTwoName);
         }
@@ -111,7 +116,27 @@ const Game = () => {
         onDrop={onDrop}
         orientation={color}
       />
-      <Box width="25%" bg="white" height="100%"></Box>
+      <Box width="25%" bg="white" height="100%">
+        <Center height="15%" borderBottom=" 2px solid black">
+          <Flex alignItems="center">
+            <BiTimer size={55}></BiTimer>
+            <Text fontSize="40px" fontWeight="500">
+              3:00
+            </Text>
+          </Flex>
+        </Center>
+        <Center width="100%" height="70%">
+          <Text>Chess Pgn here</Text>
+        </Center>
+        <Center height="15%" borderTop="2px solid black">
+          <Flex alignItems="center">
+            <BiTimer size={55}></BiTimer>
+            <Text fontSize="40px" fontWeight="500">
+              3:00
+            </Text>
+          </Flex>
+        </Center>
+      </Box>
     </Flex>
   );
 };
