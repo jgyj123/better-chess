@@ -14,6 +14,7 @@ import {
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
+  const [currentGame, setCurrentGame] = useState(null);
   const [pending, setPending] = useState(true);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -104,6 +105,8 @@ export const AuthProvider = ({ children }) => {
         logInWithEmailAndPassword,
         logout,
         signInWithGoogle,
+        currentGame,
+        setCurrentGame,
       }}
     >
       {children}
