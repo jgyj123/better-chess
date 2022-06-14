@@ -1,13 +1,9 @@
 .gameMain {
   display: flex;
   justify-content: center;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+  height: 80vh;
 }
 .board {
   border: 2px solid black;
   height: 700px;
-  margin-top: 64px;
 }
