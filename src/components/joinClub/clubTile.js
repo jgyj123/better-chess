@@ -33,15 +33,6 @@ const ClubTile = (props) => {
 
   ELEMENTS.forEach((element, index) => {
     let addAnimation = false;
-    // Elements that contain the "FLASH" class, add a listener to remove
-    // animation-class when the animation ends
-    if (element.classList[1] === "FLASH") {
-      element.addEventListener("animationend", (e) => {
-        element.classList.remove(ANIMATEDCLASSNAME);
-      });
-      addAnimation = true;
-    }
-
     // If The span element for this element does not exist in the array, add it.
     if (!ELEMENTS_SPAN[index])
       ELEMENTS_SPAN[index] = element.querySelector("span");
