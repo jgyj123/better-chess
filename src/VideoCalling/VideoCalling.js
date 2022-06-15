@@ -1,5 +1,9 @@
 import { useState, useRef } from "react";
-import { db } from "../firebase";
+import { realTimeDb } from "../firebase";
+import "./VideoCalling.css";
+import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
+import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
+import { ReactComponent as CopyIcon } from "./icons/copy.svg";
 
 const pc = new RTCPeerConnection({
   iceServers: [
@@ -84,7 +88,7 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const callDoc = db.collection("calls").doc();
+      const callDoc = realTimeDb.collection("calls").doc();
       const offerCandidates = callDoc.collection("offerCandidates");
       const answerCandidates = callDoc.collection("answerCandidates");
       setRoomId(callDoc.id);
@@ -116,7 +120,7 @@ function Videos({ mode, callId, setPage }) {
         });
       });
     } else if (mode === "join") {
-      const callDoc = db.collection("calls").doc();
+      const callDoc = realTimeDb.collection("calls").doc();
       const offerCandidates = callDoc.collection("offerCandidates");
       const answerCandidates = callDoc.collection("answerCandidates");
       pc.onicecandidate = (event) => {
@@ -157,7 +161,7 @@ function Videos({ mode, callId, setPage }) {
   const hangUp = async () => {
     pc.close();
     if (roomId) {
-      let roomRef = db.collection("calls").doc(roomId);
+      let roomRef = realTimeDb.collection("calls").doc(roomId);
       await roomRef
         .collection("answerCandidates")
         .get()
@@ -190,15 +194,18 @@ function Videos({ mode, callId, setPage }) {
           onClick={hangUp}
           disabled={!webcamActive}
           className="hangup button"
-        ></button>
+        >
+          <HangupIcon />
+        </button>
         <div tabIndex={0} role="button" className="more button">
+          <MoreIcon />
           <div className="popover">
             <button
               onClick={() => {
                 navigator.clipboard.writeText(roomId);
               }}
             >
-              Copy joining code
+              <CopyIcon /> Copy joining code
             </button>
           </div>
         </div>
