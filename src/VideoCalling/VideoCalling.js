@@ -1,5 +1,14 @@
 import { useState, useRef } from "react";
-import { realTimeDb } from "../firebase";
+import { db } from "../firebase";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+} from "firebase/firestore";
+
 import "./VideoCalling.css";
 import { ReactComponent as HangupIcon } from "./icons/hangup.svg";
 import { ReactComponent as MoreIcon } from "./icons/more-vertical.svg";
@@ -88,9 +97,9 @@ function Videos({ mode, callId, setPage }) {
     setWebcamActive(true);
 
     if (mode === "create") {
-      const callDoc = realTimeDb.collection("calls").doc();
-      const offerCandidates = callDoc.collection("offerCandidates");
-      const answerCandidates = callDoc.collection("answerCandidates");
+      const callDoc = getDocs(collection(db, "calls"));
+      const offerCandidates = collection(callDoc, "offerCandidates");
+      const answerCandidates = collection(callDoc, "answerCandidates");
       setRoomId(callDoc.id);
       pc.onicecandidate = (event) => {
         event.candidate && offerCandidates.add(event.candidate.toJSON());
@@ -120,9 +129,9 @@ function Videos({ mode, callId, setPage }) {
         });
       });
     } else if (mode === "join") {
-      const callDoc = realTimeDb.collection("calls").doc();
-      const offerCandidates = callDoc.collection("offerCandidates");
-      const answerCandidates = callDoc.collection("answerCandidates");
+      const callDoc = getDocs(collection(db, "calls"));
+      const offerCandidates = collection(callDoc, "offerCandidates");
+      const answerCandidates = collection(callDoc, "answerCandidates");
       pc.onicecandidate = (event) => {
         event.candidate && answerCandidates.add(event.candidate.toJSON());
       };
@@ -161,7 +170,7 @@ function Videos({ mode, callId, setPage }) {
   const hangUp = async () => {
     pc.close();
     if (roomId) {
-      let roomRef = realTimeDb.collection("calls").doc(roomId);
+      let roomRef = doc(collection(db, "calls"), roomId);
       await roomRef
         .collection("answerCandidates")
         .get()
