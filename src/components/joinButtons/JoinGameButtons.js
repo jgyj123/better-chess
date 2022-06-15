@@ -46,6 +46,11 @@ const JoinGameButtons = () => {
         challengerPic: photo ? photo : "22541.jpg",
         challengerId: id,
       });
+      set(ref(realTimeDb, "messages/" + gameKey), {
+        id: gameKey,
+        playerOne: name,
+        playerOnePic: photo ? photo : "22541.jpg",
+      });
       updateDoc(userRef, {
         currentGame: gameKey,
         currentColor: "white",
