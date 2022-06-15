@@ -71,14 +71,22 @@ const OnlinePlayers = () => {
                   const id = res.docs[0].id;
                   const userRef = doc(db, "users", id);
                   const gameRef = ref(realTimeDb, "games/" + gameId[0]);
+                  const messageRef = ref(realTimeDb, "messages/" + gameId[0]);
                   update(gameRef, {
                     playerTwo: id,
                     playerTwoName: res.docs[0].data().name,
+                  });
+                  update(messageRef, {
+                    playerTwo: res.docs[0].data().name,
+                    playerTwoPic: res.docs[0].data().profilePic
+                      ? res.docs[0].data().profilePic
+                      : "22541.jpg",
                   });
                   updateDoc(userRef, {
                     currentGame: gameId[0],
                     currentColor: "black",
                   });
+
                   const challengeRef = ref(
                     realTimeDb,
                     "challenges/" + gameId[0]
