@@ -16,7 +16,7 @@ const InGameChat = (props) => {
       "messages/" + props.id + "/messages" + "/" + key
     );
     set(newRef, {
-      senderName: props.color == "white" ? props.playerOne : props.playerTwo,
+      senderName: props.color === "white" ? props.playerOne : props.playerTwo,
       message: messageText,
       color: props.color,
     });
@@ -34,7 +34,7 @@ const InGameChat = (props) => {
               senderColor={item[1].color}
               key={item[0]}
               opponentPic={
-                props.color == "white" ? props.secondPic : props.firstPic
+                props.color === "white" ? props.secondPic : props.firstPic
               }
             />
           );
@@ -49,7 +49,7 @@ const InGameChat = (props) => {
             setMessageText(e.target.value);
           }}
           onKeyPress={(e) => {
-            if (e.key == "Enter") {
+            if (e.key === "Enter") {
               handleClick();
             }
           }}

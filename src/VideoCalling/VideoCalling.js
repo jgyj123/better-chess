@@ -6,7 +6,13 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
+  add,
+  set,
   doc,
+  onSnapshot,
+  addDoc,
+  setDoc,
 } from "firebase/firestore";
 
 import "./VideoCalling.css";
@@ -102,7 +108,7 @@ function Videos({ mode, callId, setPage }) {
       const answerCandidates = collection(callDoc, "answerCandidates");
       setRoomId(callDoc.id);
       pc.onicecandidate = (event) => {
-        event.candidate && offerCandidates.add(event.candidate.toJSON());
+        event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
       };
       const offerDescription = await pc.createOffer();
       await pc.setLocalDescription(offerDescription);
@@ -110,9 +116,9 @@ function Videos({ mode, callId, setPage }) {
         sdp: offerDescription.sdp,
         type: offerDescription.type,
       };
-      await callDoc.set({ offer });
+      await setDoc(callDoc, { offer });
 
-      callDoc.onSnapshot((snapshot) => {
+      onSnapshot(callDoc, (snapshot) => {
         const data = snapshot.data();
         if (!pc.currentRemoteDescription && data?.answer) {
           const answerDescription = new RTCSessionDescription(data.answer);
@@ -120,7 +126,7 @@ function Videos({ mode, callId, setPage }) {
         }
       });
 
-      answerCandidates.onSnapshot((snapshot) => {
+      onSnapshot(answerCandidates, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
             let data = change.doc.data();
@@ -133,7 +139,7 @@ function Videos({ mode, callId, setPage }) {
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
       pc.onicecandidate = (event) => {
-        event.candidate && answerCandidates.add(event.candidate.toJSON());
+        event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
       };
       const callData = (await callDoc.get()).data();
       const offerDescription = callData.offer;
@@ -151,7 +157,7 @@ function Videos({ mode, callId, setPage }) {
 
       await callDoc.update({ answer });
 
-      offerCandidates.onSnapshot((snapshot) => {
+      onSnapshot(offerCandidates, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
             let data = change.doc.data();
@@ -171,16 +177,14 @@ function Videos({ mode, callId, setPage }) {
     pc.close();
     if (roomId) {
       let roomRef = doc(collection(db, "calls"), roomId);
-      await roomRef
-        .collection("answerCandidates")
+      await collection(roomRef, "answerCandidates")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             doc.ref.delete();
           });
         });
-      await roomRef
-        .collection("offerCandidates")
+      await collection(roomRef, "offerCandidates")
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
