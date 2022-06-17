@@ -186,9 +186,9 @@ function Videos({ mode, callId, setPage }) {
       let roomRef = doc(collection(db, "calls"), roomId);
       await getDocs(collection(roomRef, "answerCandidates")).then(
         (querySnapshot) => {
-          querySnapshot.forEach((doc) => {
+          querySnapshot.forEach((item) => {
             //change
-            doc.ref.delete();
+            deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
@@ -201,7 +201,7 @@ function Videos({ mode, callId, setPage }) {
         }
       );
       //change
-      await deleteDoc(roomRef);
+      await deleteDoc(doc(db, "calls", roomId));
     }
     window.location.reload();
   };
