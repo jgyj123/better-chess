@@ -50,7 +50,8 @@ function VideoCalling() {
   const [joinCode, setJoinCode] = useState("");
   return (
     <div className="videoCalling">
-      {currentPage === "home" ? (
+      <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} />
+      {/* {currentPage === "home" ? (
         <Menu
           joinCode={joinCode}
           setJoinCode={setJoinCode}
@@ -58,7 +59,7 @@ function VideoCalling() {
         />
       ) : (
         <Videos mode={currentPage} callId={joinCode} setPage={setCurrentPage} />
-      )}
+      )} */}
     </div>
   );
 }

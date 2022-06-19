@@ -6,7 +6,19 @@ import { update, ref, onValue } from "firebase/database";
 import { db } from "./firebase";
 import { auth } from "./firebase";
 import { BiTimer } from "react-icons/bi";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
 import {
   Box,
   Text,
@@ -21,7 +33,30 @@ import {
 import { BsCameraVideo, BsChat } from "react-icons/bs";
 import InGameChat from "./components/inGameChatComponents/InGameChat";
 
-const Game = () => {
+const pc = new RTCPeerConnection({
+  iceServers: [
+    {
+      urls: "stun:openrelay.metered.ca:80",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:80",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+    {
+      urls: "turn:openrelay.metered.ca:443?transport=tcp",
+      username: "openrelayproject",
+      credential: "openrelayproject",
+    },
+  ],
+});
+
+const Game = ({ mode, callId, setPage }) => {
   // takes in Game id, white/black
   //When player creates a game, an unique game Id is created and both players will connect to this unique Id.
   // Both users have reference to the same game node on the real-time db based on game Id.
@@ -34,6 +69,137 @@ const Game = () => {
   const [messages, setMessages] = useState([]);
   const [playerOnePic, setPlayerOnePic] = useState("");
   const [playerTwoPic, setPlayerTwoPic] = useState("");
+
+  // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
+  /*
+  VIDEO PORTION START
+  */
+  const [webcamActive, setWebcamActive] = useState(false);
+  const [roomId, setRoomId] = useState(callId);
+  const localRef = useRef();
+  const remoteRef = useRef();
+  const setupSources = async () => {
+    const localStream = await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    });
+    const remoteStream = new MediaStream();
+    localStream.getTracks().forEach((track) => {
+      pc.addTrack(track, localStream);
+    });
+    pc.ontrack = (event) => {
+      event.streams[0].getTracks().forEach((track) => {
+        remoteStream.addTrack(track);
+      });
+    };
+    localRef.current.srcObject = localStream;
+    remoteRef.current.srcObject = remoteStream;
+    setWebcamActive(true);
+
+    if (mode === "create") {
+      console.log("setting...");
+      const callDoc = doc(collection(db, "calls"));
+      const offerCandidates = collection(callDoc, "offerCandidates");
+      const answerCandidates = collection(callDoc, "answerCandidates");
+      setRoomId(callDoc.id);
+      pc.onicecandidate = (event) => {
+        event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
+      };
+      const offerDescription = await pc.createOffer();
+      await pc.setLocalDescription(offerDescription);
+      const offer = {
+        sdp: offerDescription.sdp,
+        type: offerDescription.type,
+      };
+
+      await setDoc(callDoc, { offer });
+      console.log("set");
+
+      onSnapshot(callDoc, (snapshot) => {
+        const data = snapshot.data();
+        if (!pc.currentRemoteDescription && data?.answer) {
+          const answerDescription = new RTCSessionDescription(data.answer);
+          pc.setRemoteDescription(answerDescription);
+        }
+      });
+
+      onSnapshot(answerCandidates, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            let data = change.doc.data();
+            pc.addIceCandidate(new RTCIceCandidate(data));
+          }
+        });
+      });
+    } else if (mode === "join") {
+      const callDoc = doc(collection(db, "calls"), callId);
+      const offerCandidates = collection(callDoc, "offerCandidates");
+      const answerCandidates = collection(callDoc, "answerCandidates");
+      pc.onicecandidate = (event) => {
+        event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+      };
+      //change
+      const callData = (await getDoc(callDoc)).data();
+      const offerDescription = callData.offer;
+      await pc.setRemoteDescription(
+        new RTCSessionDescription(offerDescription)
+      );
+
+      const answerDescription = await pc.createAnswer();
+      await pc.setLocalDescription(answerDescription);
+
+      const answer = {
+        sdp: answerDescription.sdp,
+        type: answerDescription.type,
+      };
+      //change
+      await updateDoc(callDoc, { answer });
+
+      onSnapshot(offerCandidates, (snapshot) => {
+        //change?
+        snapshot.docs.forEach((change) => {
+          if (change.type === "added") {
+            let data = change.doc.data();
+            pc.addIceCandidate(new RTCIceCandidate(data));
+          }
+        });
+      });
+    }
+    pc.onconnectionstatechange = (event) => {
+      if (pc.connectionState === "disconnected") {
+        hangUp();
+      }
+    };
+  };
+
+  const hangUp = async () => {
+    pc.close();
+    if (roomId) {
+      let roomRef = doc(collection(db, "calls"), roomId);
+      await getDocs(collection(roomRef, "answerCandidates")).then(
+        (querySnapshot) => {
+          querySnapshot.forEach((item) => {
+            //change
+            deleteDoc(doc(db, "answerCandidates", item.id));
+          });
+        }
+      );
+      await getDocs(collection(roomRef, "offerCandidates")).then(
+        (querySnapshot) => {
+          //change
+          querySnapshot.forEach((document) => {
+            console.log(document);
+          });
+        }
+      );
+      //change
+      await deleteDoc(doc(db, "calls", roomId));
+    }
+    window.location.reload();
+  };
+  /*
+ VIDEO PORTION END
+ */
 
   const setWidth = ({ screenWidth, screenHeight }) => {
     if (screenWidth / 2 < 600) {
