@@ -21,6 +21,7 @@ import {
 } from "firebase/firestore";
 import {
   Box,
+  Button,
   Text,
   Flex,
   Center,
@@ -56,7 +57,7 @@ const pc = new RTCPeerConnection({
   ],
 });
 
-const Game = ({ mode, callId, setPage }) => {
+const Game = ({ mode, callId }) => {
   // takes in Game id, white/black
   //When player creates a game, an unique game Id is created and both players will connect to this unique Id.
   // Both users have reference to the same game node on the real-time db based on game Id.
@@ -209,8 +210,8 @@ const Game = ({ mode, callId, setPage }) => {
   };
   const onDrop = ({ sourceSquare, targetSquare }) => {
     if (
-      (game.current.turn() == "w" && color != "white") ||
-      (game.current.turn() == "b" && color != "black")
+      (game.current.turn() === "w" && color !== "white") ||
+      (game.current.turn() === "b" && color !== "black")
     ) {
       return;
     }
@@ -294,7 +295,7 @@ const Game = ({ mode, callId, setPage }) => {
           <TabPanel>
             <Box height="50%">
               <Text textAlign="center" fontSize={28}>
-                {color == "white" ? PlayerTwoName : playerOneName}
+                {color === "white" ? PlayerTwoName : playerOneName}
               </Text>
               <Flex
                 bg="black"
@@ -303,12 +304,17 @@ const Game = ({ mode, callId, setPage }) => {
                 width="300x"
                 height="225px"
               >
-                <Text color="white">Player Two Video</Text>
+                <video
+                  ref={remoteRef}
+                  autoPlay
+                  playsInline
+                  className="remote"
+                />
               </Flex>
             </Box>
             <Box height="50%">
               <Text textAlign="center" fontSize={28}>
-                {color == "black" ? PlayerTwoName : playerOneName}
+                {color === "black" ? PlayerTwoName : playerOneName}
               </Text>
               <Flex
                 bg="black"
@@ -317,9 +323,55 @@ const Game = ({ mode, callId, setPage }) => {
                 width="300x"
                 height="225px"
               >
-                <Text color="white">Player One Video</Text>
+                <video
+                  ref={localRef}
+                  autoPlay
+                  playsInline
+                  className="local"
+                  muted
+                />
               </Flex>
             </Box>
+            <Button
+              /* flex={1} */
+              px={4}
+              fontSize={"sm"}
+              rounded={"full"}
+              bg={"blue.400"}
+              color={"white"}
+              boxShadow={
+                "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+              }
+              _hover={{
+                bg: "blue.500",
+              }}
+              _focus={{
+                bg: "blue.500",
+              }}
+              onClick={setupSources}
+            >
+              Start Video
+            </Button>
+            <Button
+              /* flex={1} */
+              px={4}
+              fontSize={"sm"}
+              rounded={"full"}
+              bg={"blue.400"}
+              color={"white"}
+              boxShadow={
+                "0px 1px 25px -5px rgb(66 153 225 / 48%), 0 10px 10px -5px rgb(66 153 225 / 43%)"
+              }
+              _hover={{
+                bg: "blue.500",
+              }}
+              _focus={{
+                bg: "blue.500",
+              }}
+              onClick={hangUp}
+            >
+              End Video
+            </Button>
           </TabPanel>
           <TabPanel>
             <InGameChat
