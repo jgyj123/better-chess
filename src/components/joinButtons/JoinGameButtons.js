@@ -39,6 +39,7 @@ const JoinGameButtons = () => {
         playerOneName: name,
         playerTwo: null,
         playerTwoName: null,
+        mode: "create",
       });
       set(ref(realTimeDb, "challenges/" + gameKey), {
         id: gameKey,
