@@ -57,7 +57,7 @@ const pc = new RTCPeerConnection({
   ],
 });
 
-const Game = ({ mode, callId }) => {
+const Game = () => {
   // takes in Game id, white/black
   //When player creates a game, an unique game Id is created and both players will connect to this unique Id.
   // Both users have reference to the same game node on the real-time db based on game Id.
@@ -70,16 +70,19 @@ const Game = ({ mode, callId }) => {
   const [messages, setMessages] = useState([]);
   const [playerOnePic, setPlayerOnePic] = useState("");
   const [playerTwoPic, setPlayerTwoPic] = useState("");
+  const [mode, setMode] = useState("create");
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
   VIDEO PORTION START
   */
   const [webcamActive, setWebcamActive] = useState(false);
-  const [roomId, setRoomId] = useState(callId);
+  const [roomId, setRoomId] = useState("");
   const localRef = useRef();
   const remoteRef = useRef();
   const setupSources = async () => {
+    console.log("Hellooo");
+    console.log(mode);
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
@@ -97,12 +100,12 @@ const Game = ({ mode, callId }) => {
     remoteRef.current.srcObject = remoteStream;
     setWebcamActive(true);
 
-    if (mode === "create") {
-      console.log("setting...");
-      const callDoc = doc(collection(db, "calls"));
+    if (mode == "create") {
+      console.log("join");
+      const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
-      setRoomId(callDoc.id);
+
       pc.onicecandidate = (event) => {
         event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
       };
@@ -114,7 +117,11 @@ const Game = ({ mode, callId }) => {
       };
 
       await setDoc(callDoc, { offer });
-      console.log("set");
+      const gameRef = ref(realTimeDb, "games/" + id);
+      console.log("updating..");
+      update(gameRef, {
+        mode: "join",
+      });
 
       onSnapshot(callDoc, (snapshot) => {
         const data = snapshot.data();
@@ -133,7 +140,7 @@ const Game = ({ mode, callId }) => {
         });
       });
     } else if (mode === "join") {
-      const callDoc = doc(collection(db, "calls"), callId);
+      const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
       pc.onicecandidate = (event) => {
@@ -174,6 +181,10 @@ const Game = ({ mode, callId }) => {
   };
 
   const hangUp = async () => {
+    const gameRef = ref(realTimeDb, "games/" + id);
+    update(gameRef, {
+      mode: "create",
+    });
     pc.close();
     if (roomId) {
       let roomRef = doc(collection(db, "calls"), roomId);
@@ -240,6 +251,7 @@ const Game = ({ mode, callId }) => {
       const newId = res.docs[0].data().currentGame;
       setColor(res.docs[0].data().currentColor);
       setId(newId);
+      setRoomId(newId);
       const messageRef = ref(realTimeDb, "messages/" + newId);
       onValue(messageRef, (snapshot) => {
         const data = snapshot.val().messages;
@@ -257,6 +269,7 @@ const Game = ({ mode, callId }) => {
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
         game.current.load(data.fen);
+        setMode(data.mode);
         setFen(data.fen);
         setPlayerOneName(data.playerOneName);
 
