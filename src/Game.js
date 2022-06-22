@@ -37,7 +37,7 @@ import InGameChat from "./components/inGameChatComponents/InGameChat";
 const pc = new RTCPeerConnection({
   iceServers: [
     {
-      urls: "stun:openrelay.metered.ca:80",
+      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
     },
     {
       urls: "turn:openrelay.metered.ca:80",
@@ -55,6 +55,7 @@ const pc = new RTCPeerConnection({
       credential: "openrelayproject",
     },
   ],
+  iceCandidatePoolSize: 10,
 });
 
 const Game = () => {
@@ -71,6 +72,7 @@ const Game = () => {
   const [playerOnePic, setPlayerOnePic] = useState("");
   const [playerTwoPic, setPlayerTwoPic] = useState("");
   const [mode, setMode] = useState("create");
+  const [created, setCreated] = useState(false);
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
@@ -81,8 +83,6 @@ const Game = () => {
   const localRef = useRef();
   const remoteRef = useRef();
   const setupSources = async () => {
-    console.log("Hellooo");
-    console.log(mode);
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
@@ -100,8 +100,8 @@ const Game = () => {
     remoteRef.current.srcObject = remoteStream;
     setWebcamActive(true);
 
-    if (mode == "create") {
-      console.log("join");
+    if (mode == "create" && !created) {
+      console.log("creating");
       const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
@@ -118,28 +118,33 @@ const Game = () => {
 
       await setDoc(callDoc, { offer });
       const gameRef = ref(realTimeDb, "games/" + id);
-      console.log("updating..");
+
       update(gameRef, {
         mode: "join",
       });
-
+      setCreated(true);
       onSnapshot(callDoc, (snapshot) => {
         const data = snapshot.data();
+
         if (!pc.currentRemoteDescription && data?.answer) {
           const answerDescription = new RTCSessionDescription(data.answer);
+          console.log("setting remote description");
           pc.setRemoteDescription(answerDescription);
         }
       });
 
       onSnapshot(answerCandidates, (snapshot) => {
+        console.log("updating");
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
+            console.log("adding ice candidate");
             let data = change.doc.data();
             pc.addIceCandidate(new RTCIceCandidate(data));
           }
         });
       });
-    } else if (mode === "join") {
+    } else if (mode === "join" && !created) {
+      console.log("joining");
       const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
@@ -164,8 +169,8 @@ const Game = () => {
       await updateDoc(callDoc, { answer });
 
       onSnapshot(offerCandidates, (snapshot) => {
-        //change?
-        snapshot.docs.forEach((change) => {
+        snapshot.docChanges().forEach((change) => {
+          console.log("adding offerCandidates");
           if (change.type === "added") {
             let data = change.doc.data();
             pc.addIceCandidate(new RTCIceCandidate(data));
@@ -199,8 +204,8 @@ const Game = () => {
       await getDocs(collection(roomRef, "offerCandidates")).then(
         (querySnapshot) => {
           //change
-          querySnapshot.forEach((document) => {
-            console.log(document);
+          querySnapshot.forEach((item) => {
+            deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
