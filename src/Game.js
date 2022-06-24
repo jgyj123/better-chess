@@ -242,8 +242,11 @@ const Game = () => {
     const gameRef = ref(realTimeDb, "games/" + id);
     update(gameRef, {
       fen: game.current.fen(),
+      pgn: game.current.pgn(),
     });
+
     setFen(game.current.fen());
+    setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
   };
   let game = useRef(null);
 
@@ -273,7 +276,11 @@ const Game = () => {
       const gameRef = ref(realTimeDb, "games/" + newId);
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
-        game.current.load(data.fen);
+        if (data.pgn != "start") {
+          game.current.load_pgn(data.pgn);
+          setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
+        }
+
         setMode(data.mode);
         setFen(data.fen);
         setPlayerOneName(data.playerOneName);
@@ -425,9 +432,42 @@ const Game = () => {
             </Text>
           </Flex>
         </Center>
-        <Center width="100%" height="70%">
-          <Text>Chess Pgn here</Text>
-        </Center>
+        <Box width="100%" height="70%" overflow="scroll">
+          {pgn.split("<br />").map((move) => {
+            return (
+              <Flex width="100%">
+                <Center
+                  width="10%"
+                  backgroundColor="gray.100"
+                  borderBottom="1px solid"
+                  borderColor="gray.400"
+                  borderRight="1px solid"
+                >
+                  {" "}
+                  {move.split(" ")[0]}
+                </Center>
+                <Center
+                  width="45%"
+                  borderBottom="1px solid"
+                  borderColor="gray.400"
+                  borderRight="1px solid"
+                  fontWeight="300"
+                >
+                  {move.split(" ")[1]}
+                </Center>
+                <Center
+                  width="45%"
+                  borderBottom="1px solid"
+                  borderColor="gray.400"
+                  fontWeight="300"
+                >
+                  {" "}
+                  {move.split(" ")[2]}
+                </Center>
+              </Flex>
+            );
+          })}
+        </Box>
         <Center height="15%" borderTop="2px solid black">
           <Flex alignItems="center">
             <BiTimer size={55}></BiTimer>

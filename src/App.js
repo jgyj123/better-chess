@@ -12,9 +12,9 @@ import Navbar from "./components/Navbar/Navbar";
 import Puzzle from "./puzzles/Puzzle";
 import { Navigate } from "react-router-dom";
 import { auth } from "./firebase";
-import JoinClub from "./components/JoinClub/JoinClub";
+import JoinClub from "./components/joinClub/joinClub";
 import { AuthProvider } from "./authProvider";
-import CreateClub from "./components/JoinClub/createClub";
+import CreateClub from "./components/joinClub/createClub";
 
 const App = () => {
   const signIn = () => {
