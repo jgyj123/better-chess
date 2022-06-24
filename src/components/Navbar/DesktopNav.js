@@ -73,6 +73,11 @@ const NAV_ITEMS = [
         subLabel: "Search for a community",
         href: "/joinClub",
       },
+      {
+        label: "Create a Club",
+        subLabel: "Make your own community",
+        href: "/createClub",
+      },
     ],
   },
   {

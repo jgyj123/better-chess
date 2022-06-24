@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { addDoc, setDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import Navbar from "../Navbar/Navbar";
 const CreateClub = () => {
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
@@ -32,46 +33,50 @@ const CreateClub = () => {
       setClubDescription("");
       setClubLocation("");
       setClubName("");
+      alert("Club created successfully!");
     }
   };
   return (
-    <Box bg="white" shadow="lg" w="600px" height="330px;" margin="auto">
-      <Text textAlign="center" fontSize="40px;">
-        Create a club!
-      </Text>
-      <Flex>
+    <div>
+      <Navbar />
+      <Box bg="white" shadow="lg" w="600px" height="330px;" margin="auto">
+        <Text textAlign="center" fontSize="40px;">
+          Create a club!
+        </Text>
+        <Flex>
+          <FormControl padding={4}>
+            <FormLabel>Enter a name</FormLabel>
+            <Input
+              value={clubName}
+              onChange={(e) => {
+                setClubName(e.target.value);
+              }}
+            ></Input>
+          </FormControl>
+          <FormControl padding={4}>
+            <FormLabel>Enter a location</FormLabel>
+            <Input
+              value={clubLocation}
+              onChange={(e) => {
+                setClubLocation(e.target.value);
+              }}
+            ></Input>
+          </FormControl>
+        </Flex>
         <FormControl padding={4}>
-          <FormLabel>Enter a name</FormLabel>
+          <FormLabel>Enter a description</FormLabel>
           <Input
-            value={clubName}
+            value={clubDescription}
             onChange={(e) => {
-              setClubName(e.target.value);
+              setClubDescription(e.target.value);
             }}
-          ></Input>
+          />
         </FormControl>
-        <FormControl padding={4}>
-          <FormLabel>Enter a location</FormLabel>
-          <Input
-            value={clubLocation}
-            onChange={(e) => {
-              setClubLocation(e.target.value);
-            }}
-          ></Input>
-        </FormControl>
-      </Flex>
-      <FormControl padding={4}>
-        <FormLabel>Enter a description</FormLabel>
-        <Input
-          value={clubDescription}
-          onChange={(e) => {
-            setClubDescription(e.target.value);
-          }}
-        />
-      </FormControl>
-      <Button marginLeft={"3%"} width="94%" onClick={createNewClub}>
-        Create
-      </Button>
-    </Box>
+        <Button marginLeft={"3%"} width="94%" onClick={createNewClub}>
+          Create
+        </Button>
+      </Box>
+    </div>
   );
 };
 

@@ -24,7 +24,6 @@ const JoinClub = () => {
     <div>
       <Navbar />
       <HStack>
-        <CreateClub />
         <VStack>
           {clubs.map((club) => {
             return <ClubTile club={club} />;

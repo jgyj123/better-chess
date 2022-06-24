@@ -14,7 +14,7 @@ import { Navigate } from "react-router-dom";
 import { auth } from "./firebase";
 import JoinClub from "./components/JoinClub/JoinClub";
 import { AuthProvider } from "./authProvider";
-import VideoCalling from "./VideoCalling/VideoCalling";
+import CreateClub from "./components/JoinClub/createClub";
 
 const App = () => {
   const signIn = () => {
@@ -47,7 +47,7 @@ const App = () => {
               }
             ></Route>
             <Route exact path="/joinClub" element={<JoinClub />}></Route>
-            <Route exact path="/videoCall" element={<VideoCalling />}></Route>
+            <Route exact path="/createClub" element={<CreateClub />}></Route>
             <Route
               exact
               path="/puzzles"
