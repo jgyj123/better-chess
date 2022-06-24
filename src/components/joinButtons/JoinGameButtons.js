@@ -35,6 +35,7 @@ const JoinGameButtons = () => {
       set(ref(realTimeDb, "games/" + gameKey), {
         gameId: gameKey,
         fen: "start",
+        pgn: "start",
         playerOne: id,
         playerOneName: name,
         playerTwo: null,
