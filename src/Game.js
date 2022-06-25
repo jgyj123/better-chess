@@ -100,7 +100,7 @@ const Game = () => {
     remoteRef.current.srcObject = remoteStream;
     setWebcamActive(true);
 
-    if (mode == "create" && !created) {
+    if (mode === "create" && !created) {
       console.log("creating");
       const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
@@ -276,7 +276,7 @@ const Game = () => {
       const gameRef = ref(realTimeDb, "games/" + newId);
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
-        if (data.pgn != "start") {
+        if (data.pgn !== "start") {
           game.current.load_pgn(data.pgn);
           setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
         }

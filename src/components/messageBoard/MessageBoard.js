@@ -78,8 +78,8 @@ const MessageBoard = () => {
       <StatsBoard />
       <AddPost
         name={
-          userClubs.find((x) => x.id == selectedClub)?.name
-            ? userClubs.find((x) => x.id == selectedClub)?.name
+          userClubs.find((x) => x.id === selectedClub)?.name
+            ? userClubs.find((x) => x.id === selectedClub)?.name
             : "General"
         }
         currentClub={selectedClub}

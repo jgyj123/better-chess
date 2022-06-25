@@ -13,7 +13,16 @@ import {
 import { addDoc, setDoc, collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import Navbar from "../Navbar/Navbar";
+import FileUpload from "./FileUpload";
+import { useForm } from "react-hook-form";
 const CreateClub = () => {
+  const {
+    handleSubmit,
+    register,
+    setError,
+    control,
+    formState: { errors, isSubmitting },
+  } = useForm();
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [clubLocation, setClubLocation] = useState("");
@@ -72,6 +81,16 @@ const CreateClub = () => {
             }}
           />
         </FormControl>
+        {/* <FileUpload
+          name="Club Image"
+          acceptedFileTypes="image/*"
+          isRequired={false}
+          placeholder="Club Image"
+          control={control}
+          clubName={clubName}
+        >
+          Set Club Image
+        </FileUpload> */}
         <Button marginLeft={"3%"} width="94%" onClick={createNewClub}>
           Create
         </Button>
