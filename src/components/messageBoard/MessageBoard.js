@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import StatsBoard from "./StatsBoard";
 import Post from "./Post";
 import { db } from "../../firebase";
@@ -15,12 +15,14 @@ import {
 } from "firebase/firestore";
 import { auth } from "../../firebase";
 import AddPost from "./AddPost";
+import { Link } from "react-router-dom";
 
 const MessageBoard = () => {
   const [posts, setPosts] = useState([]);
   const [selectedClub, setSelectedClub] = useState("general");
   const [userClubs, setUserClubs] = useState([]);
   const [currentListener, setCurrentListener] = useState(() => {});
+  const [playing, setPlaying] = useState(false);
   useEffect(() => {
     const queryPosts = query(
       collection(db, "posts"),
@@ -38,6 +40,10 @@ const MessageBoard = () => {
     );
     getDocs(queryUsers).then((res) => {
       const currentClubs = res.docs[0].data().clubs;
+
+      if (res.docs[0].data().currentGame != null) {
+        setPlaying(true);
+      }
       setUserClubs(currentClubs);
     });
   }, []);
@@ -75,6 +81,13 @@ const MessageBoard = () => {
       paddingRight="10px"
       minWidth="400px"
     >
+      {playing ? (
+        <Link to="/game">
+          <Button width="100%">Return to Game</Button>
+        </Link>
+      ) : (
+        "hidden"
+      )}
       <StatsBoard />
       <AddPost
         name={

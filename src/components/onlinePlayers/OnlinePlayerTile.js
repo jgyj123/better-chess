@@ -21,7 +21,12 @@ import {
 } from "@chakra-ui/react";
 const OnlinePlayerTile = (props) => {
   return (
-    <Flex w="100%" alignItems="center" justifyContent="space-evenly">
+    <Flex
+      w="100%"
+      alignItems="center"
+      justifyContent="space-evenly"
+      marginBottom="10px"
+    >
       <Avatar />
       <Text marginLeft="10px" w="40%">
         {props.displayName}

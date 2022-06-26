@@ -76,30 +76,6 @@ const JoinGameButtons = () => {
       >
         CREATE GAME
       </Button>
-      <Button
-        w="80%"
-        size="lg"
-        p="4px;"
-        backgroundColor="#252323"
-        color="#F5F5F5"
-        border="2px"
-        borderColor="#ffffff"
-        _hover={{ bg: "#ebedf0", color: "#000000" }}
-      >
-        <Link to="/game">PLAY WITH FRIEND</Link>
-      </Button>
-      <Button
-        w="80%"
-        size="lg"
-        p="4px;"
-        backgroundColor="#252323"
-        color="#F5F5F5"
-        border="2px"
-        borderColor="#ffffff"
-        _hover={{ bg: "#ebedf0", color: "#000000" }}
-      >
-        <Link to="/game">PLAY VS COMPUTER</Link>
-      </Button>
     </VStack>
   );
 };
