@@ -222,6 +222,9 @@ const Game = () => {
     if (screenWidth / 2 < 600) {
       return 600;
     }
+    if (screenWidth / 2 > screenHeight - 60) {
+      return screenHeight - 60;
+    }
     return screenWidth / 2;
   };
   const onDrop = ({ sourceSquare, targetSquare }) => {
@@ -293,7 +296,11 @@ const Game = () => {
     });
   }, []);
   return (
-    <Flex height={"calc(100vw/2)"}>
+    <Flex
+      height={"calc(100vw/2)"}
+      maxHeight={"calc(100vh - 60px)"}
+      justifyContent="center"
+    >
       <Tabs
         bg="white"
         height="100%"

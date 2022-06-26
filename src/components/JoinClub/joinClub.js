@@ -23,7 +23,7 @@ const JoinClub = () => {
   return (
     <div>
       <Navbar />
-      <Flex>
+      <Flex justifyContent="center" width="100vw">
         <VStack>
           {clubs.map((club) => {
             return (

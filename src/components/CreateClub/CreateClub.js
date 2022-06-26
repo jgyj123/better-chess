@@ -10,11 +10,24 @@ import {
   VStack,
   HStack,
 } from "@chakra-ui/react";
-import { addDoc, setDoc, collection, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../firebase";
+
 import Navbar from "../Navbar/Navbar";
 import FileUpload from "./FileUpload";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { increment } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+  arrayUnion,
+  addDoc,
+} from "firebase/firestore";
+import { db } from "../../firebase";
+import { auth } from "../../firebase";
 const CreateClub = () => {
   const {
     handleSubmit,
@@ -26,6 +39,27 @@ const CreateClub = () => {
   const [clubName, setClubName] = useState("");
   const [clubDescription, setClubDescription] = useState("");
   const [clubLocation, setClubLocation] = useState("");
+
+  const navigate = useNavigate();
+  const joinExisitingClub = (clubId) => {
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", auth.currentUser.uid)
+    );
+    getDocs(q).then((res) => {
+      const id = res.docs[0].id;
+      const ref = doc(db, "users", id);
+      const clubRef = doc(db, "clubs", clubId);
+      updateDoc(clubRef, {
+        memberCount: increment(1),
+      });
+      updateDoc(ref, {
+        clubIds: arrayUnion(clubId),
+        clubs: arrayUnion({ id: clubId, name: clubName }),
+      });
+      navigate("/joinClub");
+    });
+  };
   const createNewClub = () => {
     if (clubName !== "" && clubLocation !== "") {
       addDoc(collection(db, "clubs"), {
@@ -38,6 +72,7 @@ const CreateClub = () => {
         let docId = res.id;
         let docRef = doc(db, "clubs/" + docId);
         updateDoc(docRef, { clubId: docRef.id });
+        joinExisitingClub(docRef.id);
       });
       setClubDescription("");
       setClubLocation("");
