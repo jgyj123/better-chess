@@ -13,7 +13,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { auth } from "../../firebase";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { realTimeDb } from "../../firebase";
 import { onValue, ref, update, remove } from "firebase/database";
 import { Avatar } from "@chakra-ui/react";
@@ -21,8 +21,16 @@ import { Avatar } from "@chakra-ui/react";
 const OnlinePlayers = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [challenges, setChallenges] = useState([]);
+  const [id, setId] = useState("");
   const navigate = useNavigate();
   useEffect(() => {
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", auth.currentUser.uid)
+    );
+    getDocs(q).then((res) => {
+      setId(res.docs[0].id);
+    });
     const users = collection(db, "users");
     onSnapshot(users, (snapshot) =>
       setOnlineUsers(
@@ -50,18 +58,28 @@ const OnlinePlayers = () => {
       <Center w="100%">
         <Text fontSize={26}>Online Players</Text>
       </Center>
-      {onlineUsers.map((user) => (
-        <OnlinePlayerTile displayName={user.name} />
-      ))}
+      <Box height="50%" overflow="scroll" width="100%">
+        {onlineUsers.map((user) => (
+          <OnlinePlayerTile displayName={user.name} key={user.id} />
+        ))}
+      </Box>
+
       <Text fontSize={26}>Open Challenges</Text>
+
       {challenges.map((gameId) => {
+        const isUser = id == gameId[1].challengerId;
         return (
-          <Flex alignItems="center" justifyContent="space-evenly" width="100%">
-            <Avatar src={gameId[1].challengerPic} />
-            <Text>{gameId[1].challenger}</Text>
+          <Flex alignItems="center" width="100%">
+            <Center width="30%">
+              <Avatar src={gameId[1].challengerPic} />
+            </Center>
+
+            <Text width="50%">{gameId[1].challenger}</Text>
             <Button
+              width="30%"
               colorScheme="blue"
               size="md"
+              disabled={isUser}
               onClick={() => {
                 const q = query(
                   collection(db, "users"),
@@ -96,7 +114,7 @@ const OnlinePlayers = () => {
                 });
               }}
             >
-              Join Game
+              {isUser ? "Searching..." : "Join Game"}
             </Button>
           </Flex>
         );
