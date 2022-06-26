@@ -33,6 +33,7 @@ export default function SignupCard() {
       registerEmail,
       registerPassword
     );
+    alert("Signed up successfully!");
     navigate("/login");
   };
 

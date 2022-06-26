@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { VStack } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
@@ -7,6 +7,7 @@ import { set, ref, push, child } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { auth } from "../../firebase";
+import { useState } from "react";
 import {
   collection,
   query,
@@ -18,7 +19,18 @@ import {
 } from "firebase/firestore";
 const JoinGameButtons = () => {
   const navigate = useNavigate();
-
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", auth.currentUser.uid)
+    );
+    getDocs(q).then((res) => {
+      if (res.docs[0].data().currentGame !== null) {
+        setPlaying(true);
+      }
+    });
+  }, []);
   const handleClick = () => {
     const gameKey = push(child(ref(realTimeDb), "games")).key;
 
@@ -32,6 +44,7 @@ const JoinGameButtons = () => {
       const name = res.docs[0].data().name;
       const photo = res.docs[0].data().profilePic;
       const userRef = doc(db, "users", id);
+
       set(ref(realTimeDb, "games/" + gameKey), {
         gameId: gameKey,
         fen: "start",
@@ -76,6 +89,24 @@ const JoinGameButtons = () => {
       >
         CREATE GAME
       </Button>
+      {playing ? (
+        <Button
+          w="80%"
+          size="lg"
+          p="4px;"
+          marginTop={10}
+          backgroundColor="red"
+          color="#F5F5F5"
+          border="2px"
+          borderColor="#ffffff"
+          _hover={{ bg: "#ebedf0", color: "red" }}
+          onClick={() => navigate("/game")}
+        >
+          RETURN TO GAME
+        </Button>
+      ) : (
+        "hidden"
+      )}
     </VStack>
   );
 };
