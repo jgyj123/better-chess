@@ -95,4 +95,14 @@ const NAV_ITEMS = [
       },
     ],
   },
+  {
+    label: "Shop",
+    children: [
+      {
+        label: "Board Cosmetics",
+        subLabel: "Buy cosmetic changes for the Chess Board",
+        href: "/shop",
+      },
+    ],
+  },
 ];

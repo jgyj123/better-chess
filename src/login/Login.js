@@ -173,9 +173,9 @@ export const Login = () => {
               </Stack>
               <HStack justify="space-between">
                 <Checkbox defaultChecked>Remember me</Checkbox>
-                <Button variant="link" colorScheme="blue" size="sm">
+                {/* <Button variant="link" colorScheme="blue" size="sm">
                   Forgot password?
-                </Button>
+                </Button> */}
               </HStack>
               <Stack spacing="6">
                 <Button colorScheme="messenger" onClick={login}>

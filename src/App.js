@@ -15,6 +15,7 @@ import { auth } from "./firebase";
 import JoinClub from "./components/joinClub/joinClub";
 import { AuthProvider } from "./authProvider";
 import CreateClub from "./components/CreateClub/CreateClub";
+import Shop from "./Shop/Shop";
 
 const App = () => {
   const signIn = () => {
@@ -48,6 +49,7 @@ const App = () => {
             ></Route>
             <Route exact path="/joinClub" element={<JoinClub />}></Route>
             <Route exact path="/createClub" element={<CreateClub />}></Route>
+            <Route exact path="/shop" element={<Shop />}></Route>
             <Route
               exact
               path="/puzzles"
