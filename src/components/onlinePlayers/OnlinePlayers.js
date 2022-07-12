@@ -93,12 +93,16 @@ const OnlinePlayers = () => {
                   update(gameRef, {
                     playerTwo: id,
                     playerTwoName: res.docs[0].data().name,
+                    playerTwoRating: res.docs[0].data().rating,
+                    playerTwoPic: res.docs[0].data().profilePic
+                      ? res.docs[0].data().profilePic
+                      : "25541.jpg",
                   });
                   update(messageRef, {
                     playerTwo: res.docs[0].data().name,
                     playerTwoPic: res.docs[0].data().profilePic
                       ? res.docs[0].data().profilePic
-                      : "22541.jpg",
+                      : "25541.jpg",
                   });
                   updateDoc(userRef, {
                     currentGame: gameId[0],

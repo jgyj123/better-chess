@@ -39,10 +39,11 @@ const JoinGameButtons = () => {
       where("uid", "==", auth.currentUser.uid)
     );
     getDocs(q).then((res) => {
-      console.log(res);
       const id = res.docs[0].id;
       const name = res.docs[0].data().name;
       const photo = res.docs[0].data().profilePic;
+      const rating = res.docs[0].data().rating;
+
       const userRef = doc(db, "users", id);
 
       set(ref(realTimeDb, "games/" + gameKey), {
@@ -51,20 +52,27 @@ const JoinGameButtons = () => {
         pgn: "start",
         playerOne: id,
         playerOneName: name,
+        playerOneRating: rating,
+        playerTwoRating: null,
         playerTwo: null,
+        playerOnePic: photo ? photo : "25541.jpg",
         playerTwoName: null,
+        playerOneTime: 300,
+        playerTwoTime: 300,
+        gameStarted: false,
         mode: "create",
+        gameEnded: false,
       });
       set(ref(realTimeDb, "challenges/" + gameKey), {
         id: gameKey,
         challenger: name,
-        challengerPic: photo ? photo : "22541.jpg",
+        challengerPic: photo ? photo : "25541.jpg",
         challengerId: id,
       });
       set(ref(realTimeDb, "messages/" + gameKey), {
         id: gameKey,
         playerOne: name,
-        playerOnePic: photo ? photo : "22541.jpg",
+        playerOnePic: photo ? photo : "25541.jpg",
       });
       updateDoc(userRef, {
         currentGame: gameKey,
