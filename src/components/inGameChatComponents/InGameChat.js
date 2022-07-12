@@ -24,7 +24,7 @@ const InGameChat = (props) => {
     setMessageText("");
   };
   return (
-    <Flex direction="column" height="500px">
+    <Flex direction="column" height="400px" overflow="scroll">
       <Box>
         {props.messages.map((item) => {
           return (
