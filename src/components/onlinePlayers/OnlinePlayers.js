@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../../firebase";
 import { getDocs } from "firebase/firestore";
 import OnlinePlayerTile from "./OnlinePlayerTile";
 import { Box, VStack, Center, Text, Button, Flex } from "@chakra-ui/react";
@@ -12,9 +11,8 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
-import { auth } from "../../firebase";
 import { Link, useNavigate } from "react-router-dom";
-import { realTimeDb } from "../../firebase";
+import { realTimeDb, auth, db } from "../../firebase";
 import { onValue, ref, update, remove } from "firebase/database";
 import { Avatar } from "@chakra-ui/react";
 

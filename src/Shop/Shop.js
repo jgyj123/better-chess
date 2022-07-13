@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import {
   Box,
   Button,
@@ -9,27 +9,56 @@ import {
   Skeleton,
   Text,
   useDisclosure,
+  HStack,
+  Spacer,
 } from "@chakra-ui/react";
+import Navbar from "../components/Navbar/Navbar";
+import Card from "./ItemCard";
+import chessboard2 from "../Shop/shopItems/ChessBoard2.png";
 
-export class Shop extends Component {
-  render() {
-    return (
-      <Box minHeight="100vh" display="flex" flexDir="column">
-        <Container maxW="xl" mt="95px" flex={1}>
-          <Box textAlign="center">
-            <Heading as="h1" size="4xl">
-              Shop
-            </Heading>
-          </Box>
-          <SimpleGrid
-            columns={{ base: 1, md: 2, lg: 3 }}
-            spacing={5}
-            mt={6}
-          ></SimpleGrid>
-        </Container>
-      </Box>
-    );
-  }
+export default function Shop(props) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedPost, setSelectedPost] = useState(null);
+  const view = (post) => {
+    setSelectedPost(post);
+    onOpen();
+  };
+
+  return (
+    <Box minHeight="100vh" display="flex" flexDir="column">
+      <Navbar w="100%" useSignIn={props.signIn} />
+      <Container maxW="xl" mt="95px">
+        <Box textAlign="center" mb={"50"}>
+          <Heading as="h1" size="4xl">
+            Shop
+          </Heading>
+        </Box>
+      </Container>
+      <Container>
+        <HStack>
+          <Card
+            name={"Board Theme One"}
+            price={"200"}
+            image={chessboard2}
+            post={null}
+            onImageClick={view}
+          />
+          <Card
+            name={"Board Theme One"}
+            price={"200"}
+            image={chessboard2}
+            post={null}
+            onImageClick={view}
+          />
+          <Card
+            name={"Board Theme One"}
+            price={"200"}
+            image={chessboard2}
+            post={null}
+            onImageClick={view}
+          />
+        </HStack>
+      </Container>
+    </Box>
+  );
 }
-
-export default Shop;

@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Login from "./login/Login";
@@ -11,16 +11,26 @@ import PrivateRoute from "./PrivateRoute";
 import Navbar from "./components/Navbar/Navbar";
 import Puzzle from "./puzzles/Puzzle";
 import { Navigate } from "react-router-dom";
-import { auth } from "./firebase";
+import { auth, db, realTimeDb } from "./firebase";
 import JoinClub from "./components/joinClub/joinClub";
 import { AuthProvider } from "./authProvider";
 import CreateClub from "./components/CreateClub/CreateClub";
 import Shop from "./Shop/Shop";
+import { ref, set } from "firebase/database";
 
 const App = () => {
   const signIn = () => {
     Navigate("/login");
   };
+  useEffect(() => {
+    // Assuming user is logged in
+    const userId = auth.currentUser !== null ? auth.currentUser.uid : null;
+
+    const reference = ref(realTimeDb, `/online/${userId}`);
+
+    // Set the /users/:userId value to true
+    set(reference, true).then(() => console.log("Online presence set"));
+  }, []);
 
   return (
     <ChakraProvider resetCSS theme={myTheme}>
@@ -49,7 +59,11 @@ const App = () => {
             ></Route>
             <Route exact path="/joinClub" element={<JoinClub />}></Route>
             <Route exact path="/createClub" element={<CreateClub />}></Route>
-            <Route exact path="/shop" element={<Shop />}></Route>
+            <Route
+              exact
+              path="/shop"
+              element={<Shop signIn={signIn} />}
+            ></Route>
             <Route
               exact
               path="/puzzles"

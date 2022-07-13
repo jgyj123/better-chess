@@ -15,9 +15,24 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  FieldValue,
+  increment,
+} from "firebase/firestore";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 
 import logo from "../components/Logo.png";
 import { useNavigate } from "react-router-dom";
@@ -30,24 +45,12 @@ export const Login = () => {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [user, setUser] = useState();
+  const usersRef = collection(db, "users");
   const {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
     signInWithGoogle,
   } = useUserAuth();
-
-  const register = async () => {
-    try {
-      const user = await createUserWithEmailAndPassword(
-        auth,
-        registerEmail,
-        registerPassword
-      );
-      console.log(user);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
   const login = async () => {
     try {
       const user = await signInWithEmailAndPassword(
@@ -55,15 +58,18 @@ export const Login = () => {
         loginEmail,
         loginPassword
       );
+      setUser(user);
+      alert("Login Success!");
       navigate("/");
     } catch (e) {
       console.log(e.message);
+      alert(e.message);
     }
   };
   const loginWithGoogle = () => {
     signInWithGoogle()
       .then(() => {
-        alert("Login Success!");
+        setUser(auth.currentUser);
         navigate("/");
       })
       .catch(function (error) {
