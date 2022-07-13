@@ -10,6 +10,7 @@ import { AspectRatio, Avatar, Image } from "@chakra-ui/react";
 import { useInterval } from "@chakra-ui/react";
 import { TiTick } from "react-icons/ti";
 import { ImCross } from "react-icons/im";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   query,
@@ -160,7 +161,6 @@ const Game = () => {
       onSnapshot(answerCandidates, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === "added") {
-            console.log("adding ice candidate");
             let data = change.doc.data();
             pc.addIceCandidate(new RTCIceCandidate(data));
           }
@@ -192,7 +192,6 @@ const Game = () => {
 
       onSnapshot(offerCandidates, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
-          console.log("adding offerCandidates");
           if (change.type === "added") {
             let data = change.doc.data();
             pc.addIceCandidate(new RTCIceCandidate(data));
@@ -317,7 +316,6 @@ const Game = () => {
 
     setFen(game.current.fen());
     setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
-    console.log("setting" + game.current.turn());
     setTurn(game.current.turn());
 
     if (game.current.game_over()) {
@@ -401,10 +399,8 @@ const Game = () => {
     setWinner(w);
 
     if (w === color) {
-      console.log("handling win");
       handleWin();
     } else {
-      console.log("handling loss");
       handleLoss();
     }
   };
@@ -458,27 +454,54 @@ const Game = () => {
       });
     }
   };
-  const declineDraw = () => {};
+  const declineDraw = () => {
+    setIncomingDrawOffer("none");
+    const gameRef = ref(realTimeDb, "games/" + id);
+    update(gameRef, {
+      drawOffer: "none",
+    });
+  };
 
   // adjust elo and coins of players
   const adjustRatings = (eloChange, winner) => {
     if (winner == "white") {
-      adjustRatingAndCoins(playerOneId, eloChange, 50);
-      adjustRatingAndCoins(playerTwoId, -eloChange, 10);
+      adjustRatingAndCoins(playerOneId, eloChange, 50, "w");
+      adjustRatingAndCoins(playerTwoId, -eloChange, 10, "l");
       return;
     } else if (winner == "black") {
-      adjustRatingAndCoins(playerOneId, -eloChange, 10);
-      adjustRatingAndCoins(playerTwoId, eloChange, 50);
+      adjustRatingAndCoins(playerOneId, -eloChange, 10, "l");
+      adjustRatingAndCoins(playerTwoId, eloChange, 50, "w");
     } else if ((winner = "draw")) {
-      adjustRatingAndCoins(playerOneId, -eloChange, 30);
-      adjustRatingAndCoins(playerTwoId, eloChange, 30);
+      adjustRatingAndCoins(playerOneId, -eloChange, 30, "d");
+      adjustRatingAndCoins(playerTwoId, eloChange, 30, "d");
     }
   };
-  const adjustRatingAndCoins = (playerId, eloChange, coins) => {
+  const adjustRatingAndCoins = (playerId, eloChange, coins, result) => {
     const userRef = doc(db, "users", playerId);
+    if (result == "w") {
+      updateDoc(userRef, {
+        rating: increment(eloChange),
+        coins: increment(coins),
+        wins: increment(1),
+        currentGame: "",
+        currentColor: "",
+      });
+      return;
+    } else if (result == "l") {
+      updateDoc(userRef, {
+        rating: increment(eloChange),
+        coins: increment(coins),
+        losses: increment(1),
+        currentGame: "",
+        currentColor: "",
+      });
+      return;
+    }
     updateDoc(userRef, {
       rating: increment(eloChange),
       coins: increment(coins),
+      currentGame: "",
+      currentColor: "",
     });
   };
 
@@ -505,7 +528,7 @@ const Game = () => {
     return minutes.toString() + ":" + carry.toString();
   };
   let game = useRef(null);
-
+  const navigate = useNavigate();
   /* Game setup logic */
   useEffect(() => {
     const q = query(
@@ -517,6 +540,9 @@ const Game = () => {
     getDocs(q).then((res) => {
       const newId = res.docs[0].data().currentGame;
       setColor(res.docs[0].data().currentColor);
+      if (newId == null || newId == "") {
+        navigate("/");
+      }
       setId(newId);
       setRoomId(newId);
       messageRef = ref(realTimeDb, "messages/" + newId);
@@ -876,17 +902,26 @@ const Game = () => {
             {gameOver ? (
               <Text width="100%" textAlign="Center">
                 {winner === "white"
-                  ? "1-0"
+                  ? "White Wins, 1-0"
                   : winner === "black"
-                  ? "0-1"
+                  ? "Black Wins, 0-1"
                   : winner === "draw"
-                  ? "1/2 - 1/2"
+                  ? "Game Drawn, 1/2 - 1/2"
                   : ""}
               </Text>
             ) : (
               ""
             )}
           </Flex>
+          {incomingDrawOffer != "none" &&
+          incomingDrawOffer == color &&
+          !gameOver ? (
+            <Center>
+              <Text>Draw Offered</Text>
+            </Center>
+          ) : (
+            ""
+          )}
           {incomingDrawOffer != "none" &&
           incomingDrawOffer != color &&
           !gameOver ? (
@@ -897,10 +932,10 @@ const Game = () => {
             >
               <Text>Your opponent has offered a draw</Text>
               <Flex>
-                <Button>
-                  <TiTick fontSize="30px" onClick={handleDraw} />
+                <Button onClick={handleDraw}>
+                  <TiTick fontSize="30px" />
                 </Button>
-                <Button>
+                <Button onClick={declineDraw}>
                   <ImCross fontSize="16px" />
                 </Button>
               </Flex>

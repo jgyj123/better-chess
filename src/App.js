@@ -22,15 +22,6 @@ const App = () => {
   const signIn = () => {
     Navigate("/login");
   };
-  useEffect(() => {
-    // Assuming user is logged in
-    const userId = auth.currentUser !== null ? auth.currentUser.uid : null;
-
-    const reference = ref(realTimeDb, `/online/${userId}`);
-
-    // Set the /users/:userId value to true
-    set(reference, true).then(() => console.log("Online presence set"));
-  }, []);
 
   return (
     <ChakraProvider resetCSS theme={myTheme}>

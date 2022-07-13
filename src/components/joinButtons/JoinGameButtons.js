@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { auth } from "../../firebase";
 import { useState } from "react";
+import { Text } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import {
   collection,
   query,
@@ -17,8 +19,18 @@ import {
   doc,
   arrayUnion,
 } from "firebase/firestore";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 const JoinGameButtons = () => {
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [playing, setPlaying] = useState(false);
   useEffect(() => {
     const q = query(
@@ -26,12 +38,15 @@ const JoinGameButtons = () => {
       where("uid", "==", auth.currentUser.uid)
     );
     getDocs(q).then((res) => {
-      if (res.docs[0].data().currentGame !== null) {
+      if (
+        res.docs[0].data().currentGame !== null &&
+        res.docs[0].data().currentGame !== ""
+      ) {
         setPlaying(true);
       }
     });
   }, []);
-  const handleClick = () => {
+  const handleClick = (time) => {
     const gameKey = push(child(ref(realTimeDb), "games")).key;
 
     const q = query(
@@ -57,8 +72,8 @@ const JoinGameButtons = () => {
         playerTwo: null,
         playerOnePic: photo ? photo : "25541.jpg",
         playerTwoName: null,
-        playerOneTime: 300,
-        playerTwoTime: 300,
+        playerOneTime: time,
+        playerTwoTime: time,
         gameStarted: false,
         mode: "create",
         gameEnded: false,
@@ -68,6 +83,7 @@ const JoinGameButtons = () => {
         challenger: name,
         challengerPic: photo ? photo : "25541.jpg",
         challengerId: id,
+        timeControl: time,
       });
       set(ref(realTimeDb, "messages/" + gameKey), {
         id: gameKey,
@@ -93,7 +109,7 @@ const JoinGameButtons = () => {
         border="2px"
         borderColor="#ffffff"
         _hover={{ bg: "#ebedf0", color: "#000000" }}
-        onClick={handleClick}
+        onClick={onOpen}
       >
         CREATE GAME
       </Button>
@@ -115,6 +131,47 @@ const JoinGameButtons = () => {
       ) : (
         "hidden"
       )}
+      return (
+      <>
+        <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader textAlign="center">
+              Select your preferred time control
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody display="flex" justifyContent="center">
+              <Button
+                colorScheme="blue"
+                m="4px"
+                size="lg"
+                onClick={() => handleClick(300)}
+              >
+                5+0
+              </Button>
+              <Button
+                colorScheme="blue"
+                m="4px"
+                size="lg"
+                onClick={() => handleClick(600)}
+              >
+                10+0
+              </Button>
+              <Button
+                colorScheme="blue"
+                m="4px"
+                size="lg"
+                onClick={() => handleClick(900)}
+              >
+                15+0
+              </Button>
+            </ModalBody>
+
+            <ModalFooter></ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
+      )
     </VStack>
   );
 };
