@@ -9,7 +9,8 @@ import {
   Skeleton,
   Text,
   useDisclosure,
-  HStack,
+  Flex,
+  Stack,
   Spacer,
 } from "@chakra-ui/react";
 import Navbar from "../components/Navbar/Navbar";
@@ -27,38 +28,36 @@ export default function Shop(props) {
   return (
     <Box minHeight="100vh" display="flex" flexDir="column">
       <Navbar w="100%" useSignIn={props.signIn} />
-      <Container maxW="xl" mt="95px">
+      <Container maxW="xl" mt="50px">
         <Box textAlign="center" mb={"50"}>
           <Heading as="h1" size="4xl">
             Shop
           </Heading>
         </Box>
       </Container>
-      <Container>
-        <HStack>
-          <Card
-            name={"Board Theme One"}
-            price={"200"}
-            image={chessboard2}
-            post={null}
-            onImageClick={view}
-          />
-          <Card
-            name={"Board Theme One"}
-            price={"200"}
-            image={chessboard2}
-            post={null}
-            onImageClick={view}
-          />
-          <Card
-            name={"Board Theme One"}
-            price={"200"}
-            image={chessboard2}
-            post={null}
-            onImageClick={view}
-          />
-        </HStack>
-      </Container>
+      <Stack justify="center" spacing={120} direction="row">
+        <Card
+          name={"Board Theme One"}
+          price={"200"}
+          image={chessboard2}
+          post={null}
+          onImageClick={view}
+        />
+        <Card
+          name={"Board Theme One"}
+          price={"200"}
+          image={chessboard2}
+          post={null}
+          onImageClick={view}
+        />
+        <Card
+          name={"Board Theme One"}
+          price={"200"}
+          image={chessboard2}
+          post={null}
+          onImageClick={view}
+        />
+      </Stack>
     </Box>
   );
 }

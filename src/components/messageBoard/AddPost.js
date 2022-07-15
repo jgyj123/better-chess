@@ -57,6 +57,8 @@ const AddPost = (props) => {
         clubId: props.currentClub,
       });
       setMessage("");
+    } else {
+      alert("Post has no text!");
     }
   };
 

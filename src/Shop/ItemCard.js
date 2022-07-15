@@ -14,7 +14,12 @@ export default function Card({ name, price, image, post, onImageClick }) {
   const cardColor = useColorModeValue("gray.100", "gray.700");
 
   return (
-    <Box backgroundColor={cardColor} borderRadius={["sm", null, "md"]}>
+    <Box
+      maxW="sm"
+      borderWidth="1px"
+      backgroundColor={cardColor}
+      borderRadius="lg"
+    >
       <Box
         onClick={() => onImageClick(post)}
         cursor="pointer"
@@ -25,14 +30,36 @@ export default function Card({ name, price, image, post, onImageClick }) {
       >
         <img src={image} alt="shop item" />
       </Box>
-      <Flex px="4" py="2" align="center" justify="space-between" w="100%">
-        <Text fontSize={["xs", null, "sm"]}>{name}</Text>
-        <Flex align="center">
-          <Text ml={1} fontSize={["xs", null, "sm"]}>
-            Cost: {price} Coins
-          </Text>
-        </Flex>
-      </Flex>
+      <Box p="6">
+        <Box display="flex" alignItems="baseline">
+          <Box
+            color="gray.500"
+            fontWeight="semibold"
+            letterSpacing="wide"
+            fontSize="xs"
+            textTransform="uppercase"
+          >
+            Teal &bull; White
+          </Box>
+        </Box>
+
+        <Box
+          mt="1"
+          fontWeight="semibold"
+          as="h4"
+          lineHeight="tight"
+          noOfLines={1}
+        >
+          {name}
+        </Box>
+
+        <Box>
+          {price}
+          <Box as="span" color="gray.600" fontSize="sm">
+            / coins
+          </Box>
+        </Box>
+      </Box>
     </Box>
   );
 }

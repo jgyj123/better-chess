@@ -15,21 +15,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import {
-  collection,
-  query,
-  where,
-  getDocs,
-  addDoc,
-  setDoc,
-  getDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  FieldValue,
-  increment,
-} from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import { OAuthButtonGroup } from "./OAuthButtonGroup";
 import { PasswordField } from "./PasswordField";
 import { auth, db } from "../firebase";

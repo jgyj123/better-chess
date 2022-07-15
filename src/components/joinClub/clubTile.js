@@ -19,6 +19,7 @@ import {
   updateDoc,
   doc,
   arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { auth } from "../../firebase";
@@ -58,7 +59,7 @@ const ClubTile = (props) => {
 
     getDocs(q).then((res) => {
       if (res.docs[0].data().clubIds.includes(props.club.id)) {
-        setJoinState("Joined");
+        setJoinState("Leave Club");
         setDisabledState(true);
       }
     });
@@ -80,6 +81,28 @@ const ClubTile = (props) => {
       updateDoc(ref, {
         clubIds: arrayUnion(props.club.id),
         clubs: arrayUnion({ id: props.club.id, name: props.club.name }),
+      });
+    });
+    // for updating members inside club document
+    const q2 = query(collection(db, "clubs"), where("id", "==", props.club.id));
+  };
+  const leaveExisitingClub = () => {
+    const q = query(
+      collection(db, "users"),
+      where("uid", "==", auth.currentUser.uid)
+    );
+    getDocs(q).then((res) => {
+      const id = res.docs[0].id;
+      const ref = doc(db, "users", id);
+      setJoinState("Join Club");
+      setDisabledState(false);
+      const clubRef = doc(db, "clubs", props.club.id);
+      updateDoc(clubRef, {
+        memberCount: increment(-1),
+      });
+      updateDoc(ref, {
+        clubIds: arrayRemove(props.club.id),
+        clubs: arrayRemove({ id: props.club.id, name: props.club.name }),
       });
     });
     const q2 = query(collection(db, "clubs"), where("id", "==", props.club.id));
@@ -118,8 +141,11 @@ const ClubTile = (props) => {
           position="absolute"
           right="10px;"
           bottom="10px"
-          onClick={() => joinExisitingClub(props.club.id)}
-          disabled={disabledState}
+          onClick={() =>
+            disabledState
+              ? leaveExisitingClub(props.club.id)
+              : joinExisitingClub(props.club.id)
+          }
         >
           {joinState}
         </Button>

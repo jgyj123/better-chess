@@ -28,13 +28,17 @@ export default function SignupCard() {
   const navigate = useNavigate("/");
   const { registerWithEmailAndPassword } = useUserAuth();
   const createUser = () => {
-    registerWithEmailAndPassword(
-      firstName + " " + lastName,
-      registerEmail,
-      registerPassword
-    );
-    alert("Signed up successfully!");
-    navigate("/login");
+    try {
+      registerWithEmailAndPassword(
+        firstName + " " + lastName,
+        registerEmail,
+        registerPassword
+      );
+      navigate("/login");
+    } catch (e) {
+      console.log(e.message);
+      alert(e.message);
+    }
   };
 
   return (
