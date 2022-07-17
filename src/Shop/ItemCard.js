@@ -1,4 +1,5 @@
 import { ArrowUpIcon } from "@chakra-ui/icons";
+import { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -34,6 +35,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { db, auth, realTimeDb } from "../firebase";
+import { FcCheckmark } from "react-icons/fc";
 
 export default function Card({
   name,
@@ -43,11 +45,9 @@ export default function Card({
   color1,
   color2,
   itemID,
+  items,
 }) {
-  const q = query(
-    collection(db, "users"),
-    where("uid", "==", auth.currentUser.uid)
-  );
+  const [disabled, setDisabled] = useState(false);
   const cardColor = useColorModeValue("gray.100", "gray.700");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const view = () => {
@@ -75,11 +75,14 @@ export default function Card({
           coins: increment(-price),
           items: arrayUnion(itemID),
         });
+        alert("Item purchased successfully!");
       }
     });
     onClose();
   };
-
+  useEffect(() => {
+    if (items.includes(itemID)) setDisabled(true);
+  }, []);
   return (
     <Box
       onClick={() => view(post)}
@@ -91,19 +94,29 @@ export default function Card({
     >
       <Modal isOpen={isOpen} onClose={closeView}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Buy Item</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            Purchase {name} for {price} coins?
-          </ModalBody>
+        {disabled ? (
+          <ModalContent>
+            <ModalHeader>
+              Item already purchased
+              <ModalCloseButton />
+            </ModalHeader>
+            <ModalBody> </ModalBody>
+          </ModalContent>
+        ) : (
+          <ModalContent>
+            <ModalHeader>Buy Item</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              Purchase {name} for {price} coins?
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="blue" variant="solid" onClick={onPurchase}>
-              Purchase
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+            <ModalFooter>
+              <Button colorScheme="blue" variant="solid" onClick={onPurchase}>
+                Purchase
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        )}
       </Modal>
       <Box borderRadius="lg" h="75%" w="100%" position="relative">
         <Image src={image} alt="shop item" />
@@ -137,6 +150,17 @@ export default function Card({
             / coins
           </Box>
         </Box>
+
+        {disabled ? (
+          <Flex alignItems="center" float="right">
+            <Text color="gray.500" fontSize="16px" marginRight="1px">
+              Owned
+            </Text>
+            <FcCheckmark />
+          </Flex>
+        ) : (
+          ""
+        )}
       </Box>
     </Box>
   );
