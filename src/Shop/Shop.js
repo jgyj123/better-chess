@@ -1,30 +1,13 @@
 import React, { Component, useState } from "react";
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  Link,
-  SimpleGrid,
-  Skeleton,
-  Text,
-  useDisclosure,
-  Flex,
-  Stack,
-  Spacer,
-} from "@chakra-ui/react";
+import { Box, Container, Heading, Grid } from "@chakra-ui/react";
 import Navbar from "../components/Navbar/Navbar";
 import Card from "./ItemCard";
+import chessboard1 from "../Shop/shopItems/ChessBoard.png";
 import chessboard2 from "../Shop/shopItems/ChessBoard2.png";
+import chessboard3 from "../Shop/shopItems/ChessBoard3.png";
+import chessboard4 from "../Shop/shopItems/ChessBoard4.png";
 
 export default function Shop(props) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedPost, setSelectedPost] = useState(null);
-  const view = (post) => {
-    setSelectedPost(post);
-    onOpen();
-  };
-
   return (
     <Box minHeight="100vh" display="flex" flexDir="column">
       <Navbar w="100%" useSignIn={props.signIn} />
@@ -35,29 +18,45 @@ export default function Shop(props) {
           </Heading>
         </Box>
       </Container>
-      <Stack justify="center" spacing={120} direction="row">
+      <Grid
+        templateColumns="repeat(3, 1fr)"
+        gap={6}
+        justifyItems="center"
+        marginBottom={10}
+      >
         <Card
-          name={"Board Theme One"}
-          price={"200"}
-          image={chessboard2}
-          post={null}
-          onImageClick={view}
+          name={"Standard"}
+          price={"400"}
+          image={chessboard1}
+          color1={"Black"}
+          color2={"White"}
+          itemID={0}
         />
         <Card
-          name={"Board Theme One"}
-          price={"200"}
+          name={"Blue And White"}
+          price={"1200"}
           image={chessboard2}
-          post={null}
-          onImageClick={view}
+          color1={"Navy Blue"}
+          color2={"White"}
+          itemID={1}
         />
         <Card
-          name={"Board Theme One"}
-          price={"200"}
-          image={chessboard2}
-          post={null}
-          onImageClick={view}
+          name={"Classic"}
+          price={"150"}
+          image={chessboard3}
+          color1={"Carmine"}
+          color2={"White"}
+          itemID={2}
         />
-      </Stack>
+        <Card
+          name={"Darkened"}
+          price={"300"}
+          image={chessboard4}
+          color1={"Black"}
+          color2={"Gray"}
+          itemID={3}
+        />
+      </Grid>
     </Box>
   );
 }

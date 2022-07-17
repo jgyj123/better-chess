@@ -1,10 +1,8 @@
 import { React, useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import Chessboard from "chessboardjsx";
-import { realTimeDb } from "./firebase";
+import { db, auth, realTimeDb } from "./firebase";
 import { update, ref, onValue, off, set } from "firebase/database";
-import { db } from "./firebase";
-import { auth } from "./firebase";
 import { BiTimer } from "react-icons/bi";
 import { AspectRatio, Avatar, Image } from "@chakra-ui/react";
 import { useInterval } from "@chakra-ui/react";
@@ -173,7 +171,6 @@ const Game = () => {
       pc.onicecandidate = (event) => {
         event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
       };
-      //change
       const callData = (await getDoc(callDoc)).data();
       const offerDescription = callData.offer;
       await pc.setRemoteDescription(
@@ -187,7 +184,6 @@ const Game = () => {
         sdp: answerDescription.sdp,
         type: answerDescription.type,
       };
-      //change
       await updateDoc(callDoc, { answer });
 
       onSnapshot(offerCandidates, (snapshot) => {
@@ -217,20 +213,17 @@ const Game = () => {
       await getDocs(collection(roomRef, "answerCandidates")).then(
         (querySnapshot) => {
           querySnapshot.forEach((item) => {
-            //change
             deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
       await getDocs(collection(roomRef, "offerCandidates")).then(
         (querySnapshot) => {
-          //change
           querySnapshot.forEach((item) => {
             deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
-      //change
       await deleteDoc(doc(db, "calls", roomId));
     }
     window.location.reload();
@@ -238,6 +231,7 @@ const Game = () => {
   /*
  VIDEO PORTION END
  */
+
   /* ChessBoard Logic */
   const setWidth = ({ screenWidth, screenHeight }) => {
     if (screenWidth / 2 < 600) {
@@ -464,11 +458,11 @@ const Game = () => {
 
   // adjust elo and coins of players
   const adjustRatings = (eloChange, winner) => {
-    if (winner == "white") {
+    if (winner === "white") {
       adjustRatingAndCoins(playerOneId, eloChange, 50, "w");
       adjustRatingAndCoins(playerTwoId, -eloChange, 10, "l");
       return;
-    } else if (winner == "black") {
+    } else if (winner === "black") {
       adjustRatingAndCoins(playerOneId, -eloChange, 10, "l");
       adjustRatingAndCoins(playerTwoId, eloChange, 50, "w");
     } else if ((winner = "draw")) {
@@ -478,7 +472,7 @@ const Game = () => {
   };
   const adjustRatingAndCoins = (playerId, eloChange, coins, result) => {
     const userRef = doc(db, "users", playerId);
-    if (result == "w") {
+    if (result === "w") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -487,7 +481,7 @@ const Game = () => {
         currentColor: "",
       });
       return;
-    } else if (result == "l") {
+    } else if (result === "l") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -540,7 +534,7 @@ const Game = () => {
     getDocs(q).then((res) => {
       const newId = res.docs[0].data().currentGame;
       setColor(res.docs[0].data().currentColor);
-      if (newId == null || newId == "") {
+      if (newId == null || newId === "") {
         navigate("/");
       }
       setId(newId);
@@ -609,7 +603,7 @@ const Game = () => {
   }, []);
   useInterval(() => {
     if (
-      turn == "none" ||
+      turn === "none" ||
       !lastMoveTime ||
       updatingTime ||
       gameOver ||

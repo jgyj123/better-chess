@@ -78,6 +78,8 @@ const CreateClub = () => {
       setClubLocation("");
       setClubName("");
       alert("Club created successfully!");
+    } else {
+      alert("Name and Description must not be empty!");
     }
   };
   return (
