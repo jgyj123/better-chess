@@ -3,6 +3,7 @@ import { Chess } from "chess.js";
 import Chessboard from "chessboardjsx";
 import { db, auth, realTimeDb } from "./firebase";
 import { update, ref, onValue, off, set } from "firebase/database";
+
 import { BiTimer } from "react-icons/bi";
 import { AspectRatio, Avatar, Image } from "@chakra-ui/react";
 import { useInterval } from "@chakra-ui/react";
@@ -98,6 +99,9 @@ const Game = () => {
   const [playerOneTimerColor, setPlayerOneTimerColor] = useState("black");
   const [playerTwoTimerColor, setPlayerTwoTimerColor] = useState("black");
   const [incomingDrawOffer, setIncomingDrawOffer] = useState("none");
+  const [whiteTileColor, setWhiteTileColor] = useState("AliceBlue");
+  const [darkTileColor, setDarkTileColor] = useState("CornFlowerBlue");
+  const [items, setItems] = useState([]);
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
@@ -171,6 +175,7 @@ const Game = () => {
       pc.onicecandidate = (event) => {
         event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
       };
+
       const callData = (await getDoc(callDoc)).data();
       const offerDescription = callData.offer;
       await pc.setRemoteDescription(
@@ -184,6 +189,7 @@ const Game = () => {
         sdp: answerDescription.sdp,
         type: answerDescription.type,
       };
+
       await updateDoc(callDoc, { answer });
 
       onSnapshot(offerCandidates, (snapshot) => {
@@ -213,17 +219,20 @@ const Game = () => {
       await getDocs(collection(roomRef, "answerCandidates")).then(
         (querySnapshot) => {
           querySnapshot.forEach((item) => {
+            //change
             deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
       await getDocs(collection(roomRef, "offerCandidates")).then(
         (querySnapshot) => {
+          //change
           querySnapshot.forEach((item) => {
             deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
+      //change
       await deleteDoc(doc(db, "calls", roomId));
     }
     window.location.reload();
@@ -231,16 +240,9 @@ const Game = () => {
   /*
  VIDEO PORTION END
  */
-
   /* ChessBoard Logic */
   const setWidth = ({ screenWidth, screenHeight }) => {
-    if (screenWidth / 2 < 600) {
-      return 600;
-    }
-    if (screenWidth / 2 > screenHeight - 60) {
-      return screenHeight - 60;
-    }
-    return screenWidth / 2;
+    return screenHeight - 60 < 600 ? 600 : screenHeight - 60;
   };
   const onDrop = ({ sourceSquare, targetSquare }) => {
     if (
@@ -458,11 +460,11 @@ const Game = () => {
 
   // adjust elo and coins of players
   const adjustRatings = (eloChange, winner) => {
-    if (winner === "white") {
+    if (winner == "white") {
       adjustRatingAndCoins(playerOneId, eloChange, 50, "w");
       adjustRatingAndCoins(playerTwoId, -eloChange, 10, "l");
       return;
-    } else if (winner === "black") {
+    } else if (winner == "black") {
       adjustRatingAndCoins(playerOneId, -eloChange, 10, "l");
       adjustRatingAndCoins(playerTwoId, eloChange, 50, "w");
     } else if ((winner = "draw")) {
@@ -472,7 +474,7 @@ const Game = () => {
   };
   const adjustRatingAndCoins = (playerId, eloChange, coins, result) => {
     const userRef = doc(db, "users", playerId);
-    if (result === "w") {
+    if (result == "w") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -481,7 +483,7 @@ const Game = () => {
         currentColor: "",
       });
       return;
-    } else if (result === "l") {
+    } else if (result == "l") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -523,6 +525,13 @@ const Game = () => {
   };
   let game = useRef(null);
   const navigate = useNavigate();
+
+  const boardThemes = [
+    ["standard", "gray", "white"],
+    ["Blue and White", "lightBlue", "white"],
+    ["Classic", "#960018", "white"],
+    ["Darkened", "black", "gray"],
+  ];
   /* Game setup logic */
   useEffect(() => {
     const q = query(
@@ -534,9 +543,11 @@ const Game = () => {
     getDocs(q).then((res) => {
       const newId = res.docs[0].data().currentGame;
       setColor(res.docs[0].data().currentColor);
-      if (newId == null || newId === "") {
+      if (newId == null || newId == "") {
         navigate("/");
       }
+      setItems(res.docs[0].data().items);
+
       setId(newId);
       setRoomId(newId);
       messageRef = ref(realTimeDb, "messages/" + newId);
@@ -603,7 +614,7 @@ const Game = () => {
   }, []);
   useInterval(() => {
     if (
-      turn === "none" ||
+      turn == "none" ||
       !lastMoveTime ||
       updatingTime ||
       gameOver ||
@@ -645,11 +656,7 @@ const Game = () => {
     }
   }, 1000);
   return (
-    <Flex
-      height={"calc(100vw/2)"}
-      maxHeight={"calc(100vh - 60px)"}
-      justifyContent="center"
-    >
+    <Flex height={"calc(100vh - 60px)"} justifyContent="center">
       <Box
         width="25%"
         height="100%"
@@ -678,18 +685,19 @@ const Game = () => {
         </Flex>
         <Tabs bg="white" height="80%" width="100%" padding="20px">
           <TabList>
-            <Tab width="50%" alignItems="center">
+            <Tab width="33%" alignItems="center">
               Video
               <Box marginLeft="4px">
                 <BsCameraVideo size="1.3em" />
               </Box>
             </Tab>
-            <Tab width="50%">
+            <Tab width="33%">
               Chat
               <Box marginLeft="4px">
                 <BsChat size="1.1em" />
               </Box>
             </Tab>
+            <Tab width="33%">Cosmetics</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -699,8 +707,9 @@ const Game = () => {
                   bg="black"
                   alignItems="center"
                   justifyContent="center"
-                  width="95%"
+                  width="90%"
                   margin="4px"
+                  maxHeight="180px"
                 >
                   <video
                     ref={remoteRef}
@@ -716,8 +725,9 @@ const Game = () => {
                   bg="black"
                   alignItems="center"
                   justifyContent="center"
-                  width="95%"
+                  width="90%"
                   margin="4px"
+                  maxHeight="180px"
                 >
                   <video
                     ref={localRef}
@@ -778,6 +788,23 @@ const Game = () => {
                 messages={messages}
               />
             </TabPanel>
+            <TabPanel>
+              {items.map((item) => {
+                return (
+                  <Flex alignItems="center" marginBottom="2px">
+                    <Text width="70% ">{boardThemes[item][0]}</Text>
+                    <Button
+                      onClick={() => {
+                        setDarkTileColor(boardThemes[item][1]);
+                        setWhiteTileColor(boardThemes[item][2]);
+                      }}
+                    >
+                      Equip
+                    </Button>
+                  </Flex>
+                );
+              })}
+            </TabPanel>
           </TabPanels>
         </Tabs>
         <Flex
@@ -806,8 +833,8 @@ const Game = () => {
         onDrop={onDrop}
         orientation={color}
         showNotation={true}
-        lightSquareStyle={{ backgroundColor: "AliceBlue" }}
-        darkSquareStyle={{ backgroundColor: "CornFlowerBlue" }}
+        lightSquareStyle={{ backgroundColor: whiteTileColor }}
+        darkSquareStyle={{ backgroundColor: darkTileColor }}
       />
       <Box
         width="25%"

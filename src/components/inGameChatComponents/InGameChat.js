@@ -24,8 +24,8 @@ const InGameChat = (props) => {
     setMessageText("");
   };
   return (
-    <Flex direction="column" height="400px" overflow="scroll">
-      <Box>
+    <Flex direction="column" position="relative" height="60vh">
+      <Box overflow="scroll" height="85%">
         {props.messages.map((item) => {
           return (
             <Message
@@ -40,8 +40,10 @@ const InGameChat = (props) => {
           );
         })}
       </Box>
-      <Box marginTop="auto">
+      <Box marginTop="auto" marginBottom="4px">
         <Input
+          position="absolute"
+          bottom="10px"
           type="text"
           placeholder="Enter a message here..."
           value={messageText}

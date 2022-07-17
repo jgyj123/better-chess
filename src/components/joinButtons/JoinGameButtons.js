@@ -38,10 +38,7 @@ const JoinGameButtons = () => {
       where("uid", "==", auth.currentUser.uid)
     );
     getDocs(q).then((res) => {
-      if (
-        res.docs[0].data().currentGame !== null &&
-        res.docs[0].data().currentGame !== ""
-      ) {
+      if (res.docs[0].data().currentGame) {
         setPlaying(true);
       }
     });
