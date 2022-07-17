@@ -102,6 +102,7 @@ const Game = () => {
   const [whiteTileColor, setWhiteTileColor] = useState("AliceBlue");
   const [darkTileColor, setDarkTileColor] = useState("CornFlowerBlue");
   const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
@@ -249,7 +250,8 @@ const Game = () => {
       (game.current.turn() === "w" && color !== "white") ||
       (game.current.turn() === "b" && color !== "black") ||
       gameOver ||
-      !playerTwoId
+      !playerTwoId ||
+      loading
     ) {
       return;
     }
@@ -527,10 +529,10 @@ const Game = () => {
   const navigate = useNavigate();
 
   const boardThemes = [
-    ["standard", "gray", "white"],
+    ["standard", "#8b5349", "white"],
     ["Blue and White", "lightBlue", "white"],
-    ["Classic", "#960018", "white"],
-    ["Darkened", "black", "gray"],
+    ["Classic", "#e66771", "white"],
+    ["Darkened", "brown", "lightBrown"],
   ];
   /* Game setup logic */
   useEffect(() => {
@@ -569,8 +571,10 @@ const Game = () => {
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
         if (data.pgn !== "start") {
+          setLoading(true);
           game.current.load_pgn(data.pgn);
           setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
+          setLoading(false);
         }
         setTurn(data.turn);
         setPlayerOnePic(data.playerOnePic);
@@ -597,7 +601,6 @@ const Game = () => {
           setIncomingDrawOffer(data.drawOffer);
         }
 
-        setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
         if (data.playerTwoName != null) {
           setPlayerTwoName(data.playerTwoName);
           setPlayerTwoRating(data.playerTwoRating);
@@ -835,6 +838,201 @@ const Game = () => {
         showNotation={true}
         lightSquareStyle={{ backgroundColor: whiteTileColor }}
         darkSquareStyle={{ backgroundColor: darkTileColor }}
+        pieces={{
+          bQ: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              width="45"
+              height="45"
+            >
+              <g
+                style={{
+                  opacity: "1",
+                  fill: "#000000",
+                  fillOpacity: "1",
+                  fillRule: "evenodd",
+                  stroke: "#000000",
+                  strokeWidth: "1.5",
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeMiterlimit: "4",
+                  strokeDasharray: "none",
+                  strokeOpacity: "1",
+                }}
+              >
+                <g
+                  style={{
+                    fill: "#000000",
+                    stroke: "none",
+                  }}
+                >
+                  <circle cx="6" cy="12" r="2.75" />
+                  <circle cx="14" cy="9" r="2.75" />
+                  <circle cx="22.5" cy="8" r="2.75" />
+                  <circle cx="31" cy="9" r="2.75" />
+                  <circle cx="39" cy="12" r="2.75" />
+                </g>
+                <path
+                  d="M 9,26 C 17.5,24.5 30,24.5 36,26 L 38.5,13.5 L 31,25 L 30.7,10.9 L 25.5,24.5 L 22.5,10 L 19.5,24.5 L 14.3,10.9 L 14,25 L 6.5,13.5 L 9,26 z"
+                  style={{
+                    strokeLinecap: "butt",
+                    stroke: "#000000",
+                  }}
+                />
+                <path
+                  d="M 9,26 C 9,28 10.5,28 11.5,30 C 12.5,31.5 12.5,31 12,33.5 C 10.5,34.5 10.5,36 10.5,36 C 9,37.5 11,38.5 11,38.5 C 17.5,39.5 27.5,39.5 34,38.5 C 34,38.5 35.5,37.5 34,36 C 34,36 34.5,34.5 33,33.5 C 32.5,31 32.5,31.5 33.5,30 C 34.5,28 36,28 36,26 C 27.5,24.5 17.5,24.5 9,26 z"
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 11,38.5 A 35,35 1 0 0 34,38.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#000000",
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 11,29 A 35,35 1 0 1 34,29"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+                <path
+                  d="M 12.5,31.5 L 32.5,31.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+                <path
+                  d="M 11.5,34.5 A 35,35 1 0 0 33.5,34.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+                <path
+                  d="M 10.5,37.5 A 35,35 1 0 0 34.5,37.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+              </g>
+            </svg>
+          ),
+          bR: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              width="45"
+              height="45"
+            >
+              <g
+                style={{
+                  opacity: "1",
+                  fill: "#000000",
+                  fillOpacity: "1",
+                  fillRule: "evenodd",
+                  stroke: "#000000",
+                  strokeWidth: "1.5",
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeMiterlimit: "4",
+                  strokeDasharray: "none",
+                  strokeOpacity: "1",
+                }}
+              >
+                <path
+                  d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 12.5,32 L 14,29.5 L 31,29.5 L 32.5,32 L 12.5,32 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 14,29.5 L 14,16.5 L 31,16.5 L 31,29.5 L 14,29.5 z "
+                  style={{
+                    strokeLinecap: "butt",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 14,16.5 L 11,14 L 34,14 L 31,16.5 L 14,16.5 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 11,14 L 11,9 L 15,9 L 15,11 L 20,11 L 20,9 L 25,9 L 25,11 L 30,11 L 30,9 L 34,9 L 34,14 L 11,14 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 12,35.5 L 33,35.5 L 33,35.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 13,31.5 L 32,31.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 14,29.5 L 31,29.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 14,16.5 L 31,16.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 11,14 L 34,14"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+              </g>
+            </svg>
+          ),
+        }}
       />
       <Box
         width="25%"
