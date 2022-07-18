@@ -37,7 +37,7 @@ import {
 import { db, auth, realTimeDb } from "../firebase";
 import { FcCheckmark } from "react-icons/fc";
 
-export default function Card({
+export default function MiscItemCard({
   name,
   price,
   image,
@@ -78,7 +78,6 @@ export default function Card({
         alert("Item purchased successfully!");
       }
     });
-    onClose();
   };
   useEffect(() => {
     if (items.includes(itemID)) setDisabled(true);
@@ -119,7 +118,7 @@ export default function Card({
           </ModalContent>
         )}
       </Modal>
-      <Box borderRadius="lg" h="75%" w="100%" position="relative">
+      <Box borderRadius="lg" h="60%" w="100%" position="relative">
         <Image src={image} alt="shop item" />
       </Box>
       <Box p="6">
