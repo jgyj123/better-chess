@@ -70,7 +70,7 @@ const OnlinePlayers = () => {
         ))}
       </Box>
       <Text fontSize={26}>Personal Challenges</Text>
-      <Box minHeight="10vh">
+      <Box minHeight="10vh " width="100%">
         {challenges.map((gameId) => {
           const isUser = id == gameId[1].challengerId;
           if (gameId[1].to != id) return "";

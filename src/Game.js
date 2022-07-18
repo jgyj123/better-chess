@@ -41,7 +41,7 @@ import {
 import { BsCameraVideo, BsChat } from "react-icons/bs";
 import InGameChat from "./components/inGameChatComponents/InGameChat";
 import { BsFlag } from "react-icons/bs";
-
+import { GrPaint } from "react-icons/gr";
 const pc = new RTCPeerConnection({
   iceServers: [
     {
@@ -103,6 +103,8 @@ const Game = () => {
   const [darkTileColor, setDarkTileColor] = useState("CornFlowerBlue");
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [playerOneIcon, setPlayerOneIcon] = useState("");
+  const [playerTwoIcon, setPlayerTwoIcon] = useState("");
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
@@ -323,6 +325,20 @@ const Game = () => {
   /* 
  Game Over Logic
  */
+  const setIcon = (color, src) => {
+    const gameRef = ref(realTimeDb, "games/" + id);
+    if (color === "white") {
+      update(gameRef, {
+        playerOneIcon: src,
+      });
+      setPlayerOneIcon(src);
+      return;
+    }
+    update(gameRef, {
+      playerTwoIcon: src,
+    });
+    setPlayerTwoIcon(src);
+  };
   const handleWin = () => {
     let rating = playerOneRating;
     let opponentRating = playerTwoRating;
@@ -529,10 +545,18 @@ const Game = () => {
   const navigate = useNavigate();
 
   const boardThemes = [
-    ["standard", "#8b5349", "white"],
-    ["Blue and White", "lightBlue", "white"],
-    ["Classic", "#e66771", "white"],
-    ["Darkened", "brown", "lightBrown"],
+    ["Pink Blossom", "#e66771", "#FCFBF4", "./ChessBoard5.png"],
+    ["Woody", "#9a5938", "#bfb2a1", "./ChessBoard6.png"],
+    ["Calm Cyan", "#69ccd1", "white", "./ChessBoard7.png"],
+    ["French Beige", "#cdaa7d", "#fff8dc", "./ChessBoard8.png"],
+  ];
+  const miscItems = [
+    ["Smiley", "./smile.png"],
+    ["Cool Emoji", "./cool.png"],
+    ["Confused Emoji", "./confused.png"],
+    ["Queen Crown", "./queenCrown.png"],
+    ["King Crown", "./crown2.png"],
+    ["Lightning", "./flash.png"],
   ];
   /* Game setup logic */
   useEffect(() => {
@@ -607,6 +631,12 @@ const Game = () => {
           setPlayerTwoPic(data.playerTwoPic);
           setPlayerTwoId(data.playerTwo);
         }
+        if (data.playerOneIcon != null) {
+          setPlayerOneIcon(data.playerOneIcon);
+        }
+        if (data.playerTwoIcon != null) {
+          setPlayerTwoIcon(data.playerTwoIcon);
+        }
       });
     });
 
@@ -674,13 +704,22 @@ const Game = () => {
           alignItems="center"
           padding="4px"
         >
-          {color === "black" ? (
-            <Avatar src={playerOnePic} size="md" marginRight="10px" />
-          ) : (
-            <Avatar src={playerTwoPic} size="md" marginRight="10px" />
-          )}
+          <Box marginLeft="15px">
+            {color === "black" ? (
+              <Avatar src={playerOnePic} size="md" marginRight="10px" />
+            ) : (
+              <Avatar src={playerTwoPic} size="md" marginRight="10px" />
+            )}
+          </Box>
           <Flex direction="column" width="100%" justifyContent="center">
-            <Text>{color === "white" ? playerTwoName : playerOneName}</Text>
+            <Flex alignItems="center">
+              <Text>{color === "white" ? playerTwoName : playerOneName}</Text>
+              <Box boxSize="20px" marginLeft="4px">
+                <Image
+                  src={color === "white" ? playerTwoIcon : playerOneIcon}
+                ></Image>
+              </Box>
+            </Flex>
             <Text color="gray.600" fontSize="12px">
               {color === "white" ? playerTwoRating : playerOneRating}
             </Text>
@@ -688,19 +727,24 @@ const Game = () => {
         </Flex>
         <Tabs bg="white" height="80%" width="100%" padding="20px">
           <TabList>
-            <Tab width="33%" alignItems="center">
+            <Tab width="30%" alignItems="center">
               Video
               <Box marginLeft="4px">
                 <BsCameraVideo size="1.3em" />
               </Box>
             </Tab>
-            <Tab width="33%">
+            <Tab width="30%">
               Chat
               <Box marginLeft="4px">
                 <BsChat size="1.1em" />
               </Box>
             </Tab>
-            <Tab width="33%">Cosmetics</Tab>
+            <Tab width="40%">
+              Cosmetics
+              <Box marginLeft="4px">
+                <GrPaint size="1.1em" />
+              </Box>
+            </Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -791,22 +835,61 @@ const Game = () => {
                 messages={messages}
               />
             </TabPanel>
-            <TabPanel>
-              {items.map((item) => {
-                return (
-                  <Flex alignItems="center" marginBottom="2px">
-                    <Text width="70% ">{boardThemes[item][0]}</Text>
-                    <Button
-                      onClick={() => {
-                        setDarkTileColor(boardThemes[item][1]);
-                        setWhiteTileColor(boardThemes[item][2]);
-                      }}
-                    >
-                      Equip
-                    </Button>
-                  </Flex>
-                );
-              })}
+            <TabPanel maxHeight="60vh" overflowY="scroll">
+              <Box>
+                <Center>
+                  <h2>Board Themes</h2>
+                </Center>
+
+                {items.map((item) => {
+                  if (item <= 3) {
+                    return (
+                      <Flex alignItems="center" marginBottom="2px">
+                        <Flex width="70%">
+                          <Box boxSize="1.8em">
+                            <Image src={boardThemes[item][3]} />
+                          </Box>
+                          <Text marginLeft="4px">{boardThemes[item][0]}</Text>
+                        </Flex>
+
+                        <Button
+                          onClick={() => {
+                            setDarkTileColor(boardThemes[item][1]);
+                            setWhiteTileColor(boardThemes[item][2]);
+                          }}
+                        >
+                          Equip
+                        </Button>
+                      </Flex>
+                    );
+                  }
+                })}
+                <Center marginTop="4px">
+                  <h2>Misc Items</h2>
+                </Center>
+                {items.map((item) => {
+                  if (item > 3) {
+                    return (
+                      <Flex alignItems="center" marginBottom="2px">
+                        <Flex width="70%" alignItems="center">
+                          <Box boxSize="1.8em">
+                            <Image src={miscItems[item - 4][1]} />
+                          </Box>
+                          <Text marginLeft="4px">{miscItems[item - 4][0]}</Text>
+                        </Flex>
+
+                        <Button
+                          onClick={() => {
+                            setIcon(color, miscItems[item - 4][1]);
+                          }}
+                        >
+                          Equip
+                        </Button>
+                      </Flex>
+                    );
+                  }
+                })}
+              </Box>
             </TabPanel>
           </TabPanels>
         </Tabs>
@@ -817,13 +900,23 @@ const Game = () => {
           alignItems="center"
           padding="4px"
         >
-          {color === "white" ? (
-            <Avatar src={playerOnePic} size="md" marginRight="10px" />
-          ) : (
-            <Avatar src={playerTwoPic} size="md" marginRight="10px" />
-          )}
+          <Box marginLeft="15px">
+            {color === "white" ? (
+              <Avatar src={playerOnePic} size="md" marginRight="10px" />
+            ) : (
+              <Avatar src={playerTwoPic} size="md" marginRight="10px" />
+            )}
+          </Box>
           <Flex direction="column" width="100%" justifyContent="center">
-            <Text>{color === "black" ? playerTwoName : playerOneName}</Text>
+            <Flex alignItems="center">
+              <Text>{color === "black" ? playerTwoName : playerOneName}</Text>
+              <Box boxSize="20px" marginLeft="4px">
+                <Image
+                  src={color === "black" ? playerTwoIcon : playerOneIcon}
+                ></Image>
+              </Box>
+            </Flex>
+
             <Text color="gray.600" fontSize="12px">
               {color === "black" ? playerTwoRating : playerOneRating}
             </Text>
