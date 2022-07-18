@@ -3,6 +3,7 @@ import { Chess } from "chess.js";
 import Chessboard from "chessboardjsx";
 import { db, auth, realTimeDb } from "./firebase";
 import { update, ref, onValue, off, set } from "firebase/database";
+
 import { BiTimer } from "react-icons/bi";
 import { AspectRatio, Avatar, Image } from "@chakra-ui/react";
 import { useInterval } from "@chakra-ui/react";
@@ -98,6 +99,10 @@ const Game = () => {
   const [playerOneTimerColor, setPlayerOneTimerColor] = useState("black");
   const [playerTwoTimerColor, setPlayerTwoTimerColor] = useState("black");
   const [incomingDrawOffer, setIncomingDrawOffer] = useState("none");
+  const [whiteTileColor, setWhiteTileColor] = useState("AliceBlue");
+  const [darkTileColor, setDarkTileColor] = useState("CornFlowerBlue");
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
@@ -171,6 +176,7 @@ const Game = () => {
       pc.onicecandidate = (event) => {
         event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
       };
+
       const callData = (await getDoc(callDoc)).data();
       const offerDescription = callData.offer;
       await pc.setRemoteDescription(
@@ -184,6 +190,7 @@ const Game = () => {
         sdp: answerDescription.sdp,
         type: answerDescription.type,
       };
+
       await updateDoc(callDoc, { answer });
 
       onSnapshot(offerCandidates, (snapshot) => {
@@ -213,17 +220,20 @@ const Game = () => {
       await getDocs(collection(roomRef, "answerCandidates")).then(
         (querySnapshot) => {
           querySnapshot.forEach((item) => {
+            //change
             deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
       await getDocs(collection(roomRef, "offerCandidates")).then(
         (querySnapshot) => {
+          //change
           querySnapshot.forEach((item) => {
             deleteDoc(doc(db, "answerCandidates", item.id));
           });
         }
       );
+      //change
       await deleteDoc(doc(db, "calls", roomId));
     }
     window.location.reload();
@@ -231,23 +241,17 @@ const Game = () => {
   /*
  VIDEO PORTION END
  */
-
   /* ChessBoard Logic */
   const setWidth = ({ screenWidth, screenHeight }) => {
-    if (screenWidth / 2 < 600) {
-      return 600;
-    }
-    if (screenWidth / 2 > screenHeight - 60) {
-      return screenHeight - 60;
-    }
-    return screenWidth / 2;
+    return screenHeight - 60 < 600 ? 600 : screenHeight - 60;
   };
   const onDrop = ({ sourceSquare, targetSquare }) => {
     if (
       (game.current.turn() === "w" && color !== "white") ||
       (game.current.turn() === "b" && color !== "black") ||
       gameOver ||
-      !playerTwoId
+      !playerTwoId ||
+      loading
     ) {
       return;
     }
@@ -458,11 +462,11 @@ const Game = () => {
 
   // adjust elo and coins of players
   const adjustRatings = (eloChange, winner) => {
-    if (winner === "white") {
+    if (winner == "white") {
       adjustRatingAndCoins(playerOneId, eloChange, 50, "w");
       adjustRatingAndCoins(playerTwoId, -eloChange, 10, "l");
       return;
-    } else if (winner === "black") {
+    } else if (winner == "black") {
       adjustRatingAndCoins(playerOneId, -eloChange, 10, "l");
       adjustRatingAndCoins(playerTwoId, eloChange, 50, "w");
     } else if ((winner = "draw")) {
@@ -472,7 +476,7 @@ const Game = () => {
   };
   const adjustRatingAndCoins = (playerId, eloChange, coins, result) => {
     const userRef = doc(db, "users", playerId);
-    if (result === "w") {
+    if (result == "w") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -481,7 +485,7 @@ const Game = () => {
         currentColor: "",
       });
       return;
-    } else if (result === "l") {
+    } else if (result == "l") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -523,6 +527,13 @@ const Game = () => {
   };
   let game = useRef(null);
   const navigate = useNavigate();
+
+  const boardThemes = [
+    ["standard", "#8b5349", "white"],
+    ["Blue and White", "lightBlue", "white"],
+    ["Classic", "#e66771", "white"],
+    ["Darkened", "brown", "lightBrown"],
+  ];
   /* Game setup logic */
   useEffect(() => {
     const q = query(
@@ -534,9 +545,11 @@ const Game = () => {
     getDocs(q).then((res) => {
       const newId = res.docs[0].data().currentGame;
       setColor(res.docs[0].data().currentColor);
-      if (newId == null || newId === "") {
+      if (newId == null || newId == "") {
         navigate("/");
       }
+      setItems(res.docs[0].data().items);
+
       setId(newId);
       setRoomId(newId);
       messageRef = ref(realTimeDb, "messages/" + newId);
@@ -558,8 +571,10 @@ const Game = () => {
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
         if (data.pgn !== "start") {
+          setLoading(true);
           game.current.load_pgn(data.pgn);
           setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
+          setLoading(false);
         }
         setTurn(data.turn);
         setPlayerOnePic(data.playerOnePic);
@@ -586,7 +601,6 @@ const Game = () => {
           setIncomingDrawOffer(data.drawOffer);
         }
 
-        setPgn(game.current.pgn({ max_width: 5, newline_char: "<br />" }));
         if (data.playerTwoName != null) {
           setPlayerTwoName(data.playerTwoName);
           setPlayerTwoRating(data.playerTwoRating);
@@ -603,7 +617,7 @@ const Game = () => {
   }, []);
   useInterval(() => {
     if (
-      turn === "none" ||
+      turn == "none" ||
       !lastMoveTime ||
       updatingTime ||
       gameOver ||
@@ -645,11 +659,7 @@ const Game = () => {
     }
   }, 1000);
   return (
-    <Flex
-      height={"calc(100vw/2)"}
-      maxHeight={"calc(100vh - 60px)"}
-      justifyContent="center"
-    >
+    <Flex height={"calc(100vh - 60px)"} justifyContent="center">
       <Box
         width="25%"
         height="100%"
@@ -678,18 +688,19 @@ const Game = () => {
         </Flex>
         <Tabs bg="white" height="80%" width="100%" padding="20px">
           <TabList>
-            <Tab width="50%" alignItems="center">
+            <Tab width="33%" alignItems="center">
               Video
               <Box marginLeft="4px">
                 <BsCameraVideo size="1.3em" />
               </Box>
             </Tab>
-            <Tab width="50%">
+            <Tab width="33%">
               Chat
               <Box marginLeft="4px">
                 <BsChat size="1.1em" />
               </Box>
             </Tab>
+            <Tab width="33%">Cosmetics</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
@@ -699,8 +710,9 @@ const Game = () => {
                   bg="black"
                   alignItems="center"
                   justifyContent="center"
-                  width="95%"
+                  width="90%"
                   margin="4px"
+                  maxHeight="180px"
                 >
                   <video
                     ref={remoteRef}
@@ -716,8 +728,9 @@ const Game = () => {
                   bg="black"
                   alignItems="center"
                   justifyContent="center"
-                  width="95%"
+                  width="90%"
                   margin="4px"
+                  maxHeight="180px"
                 >
                   <video
                     ref={localRef}
@@ -778,6 +791,23 @@ const Game = () => {
                 messages={messages}
               />
             </TabPanel>
+            <TabPanel>
+              {items.map((item) => {
+                return (
+                  <Flex alignItems="center" marginBottom="2px">
+                    <Text width="70% ">{boardThemes[item][0]}</Text>
+                    <Button
+                      onClick={() => {
+                        setDarkTileColor(boardThemes[item][1]);
+                        setWhiteTileColor(boardThemes[item][2]);
+                      }}
+                    >
+                      Equip
+                    </Button>
+                  </Flex>
+                );
+              })}
+            </TabPanel>
           </TabPanels>
         </Tabs>
         <Flex
@@ -806,8 +836,203 @@ const Game = () => {
         onDrop={onDrop}
         orientation={color}
         showNotation={true}
-        lightSquareStyle={{ backgroundColor: "AliceBlue" }}
-        darkSquareStyle={{ backgroundColor: "CornFlowerBlue" }}
+        lightSquareStyle={{ backgroundColor: whiteTileColor }}
+        darkSquareStyle={{ backgroundColor: darkTileColor }}
+        pieces={{
+          bQ: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              width="45"
+              height="45"
+            >
+              <g
+                style={{
+                  opacity: "1",
+                  fill: "#000000",
+                  fillOpacity: "1",
+                  fillRule: "evenodd",
+                  stroke: "#000000",
+                  strokeWidth: "1.5",
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeMiterlimit: "4",
+                  strokeDasharray: "none",
+                  strokeOpacity: "1",
+                }}
+              >
+                <g
+                  style={{
+                    fill: "#000000",
+                    stroke: "none",
+                  }}
+                >
+                  <circle cx="6" cy="12" r="2.75" />
+                  <circle cx="14" cy="9" r="2.75" />
+                  <circle cx="22.5" cy="8" r="2.75" />
+                  <circle cx="31" cy="9" r="2.75" />
+                  <circle cx="39" cy="12" r="2.75" />
+                </g>
+                <path
+                  d="M 9,26 C 17.5,24.5 30,24.5 36,26 L 38.5,13.5 L 31,25 L 30.7,10.9 L 25.5,24.5 L 22.5,10 L 19.5,24.5 L 14.3,10.9 L 14,25 L 6.5,13.5 L 9,26 z"
+                  style={{
+                    strokeLinecap: "butt",
+                    stroke: "#000000",
+                  }}
+                />
+                <path
+                  d="M 9,26 C 9,28 10.5,28 11.5,30 C 12.5,31.5 12.5,31 12,33.5 C 10.5,34.5 10.5,36 10.5,36 C 9,37.5 11,38.5 11,38.5 C 17.5,39.5 27.5,39.5 34,38.5 C 34,38.5 35.5,37.5 34,36 C 34,36 34.5,34.5 33,33.5 C 32.5,31 32.5,31.5 33.5,30 C 34.5,28 36,28 36,26 C 27.5,24.5 17.5,24.5 9,26 z"
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 11,38.5 A 35,35 1 0 0 34,38.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#000000",
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 11,29 A 35,35 1 0 1 34,29"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+                <path
+                  d="M 12.5,31.5 L 32.5,31.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+                <path
+                  d="M 11.5,34.5 A 35,35 1 0 0 33.5,34.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+                <path
+                  d="M 10.5,37.5 A 35,35 1 0 0 34.5,37.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                  }}
+                />
+              </g>
+            </svg>
+          ),
+          bR: (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              version="1.1"
+              width="45"
+              height="45"
+            >
+              <g
+                style={{
+                  opacity: "1",
+                  fill: "#000000",
+                  fillOpacity: "1",
+                  fillRule: "evenodd",
+                  stroke: "#000000",
+                  strokeWidth: "1.5",
+                  strokeLinecap: "round",
+                  strokeLinejoin: "round",
+                  strokeMiterlimit: "4",
+                  strokeDasharray: "none",
+                  strokeOpacity: "1",
+                }}
+              >
+                <path
+                  d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 12.5,32 L 14,29.5 L 31,29.5 L 32.5,32 L 12.5,32 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 14,29.5 L 14,16.5 L 31,16.5 L 31,29.5 L 14,29.5 z "
+                  style={{
+                    strokeLinecap: "butt",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 14,16.5 L 11,14 L 34,14 L 31,16.5 L 14,16.5 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 11,14 L 11,9 L 15,9 L 15,11 L 20,11 L 20,9 L 25,9 L 25,11 L 30,11 L 30,9 L 34,9 L 34,14 L 11,14 z "
+                  style={{
+                    strokeLinecap: "butt",
+                  }}
+                />
+                <path
+                  d="M 12,35.5 L 33,35.5 L 33,35.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 13,31.5 L 32,31.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 14,29.5 L 31,29.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 14,16.5 L 31,16.5"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+                <path
+                  d="M 11,14 L 34,14"
+                  style={{
+                    fill: "none",
+                    stroke: "#ffffff",
+                    strokeWidth: "1",
+                    strokeLinejoin: "miter",
+                  }}
+                />
+              </g>
+            </svg>
+          ),
+        }}
       />
       <Box
         width="25%"
