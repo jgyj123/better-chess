@@ -1,10 +1,8 @@
-import { ArrowUpIcon } from "@chakra-ui/icons";
 import { useEffect, useState } from "react";
 import {
   Box,
   Flex,
   Image,
-  Link,
   Text,
   Button,
   useColorModeValue,
@@ -22,19 +20,12 @@ import {
   query,
   where,
   getDocs,
-  addDoc,
-  setDoc,
-  getDoc,
   updateDoc,
-  deleteDoc,
   doc,
-  onSnapshot,
-  FieldValue,
   increment,
-  decrement,
   arrayUnion,
 } from "firebase/firestore";
-import { db, auth, realTimeDb } from "../firebase";
+import { db, auth } from "../firebase";
 import { FcCheckmark } from "react-icons/fc";
 
 export default function Card({

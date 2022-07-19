@@ -11,7 +11,6 @@
     "@popperjs/core": "^2.11.5",
     "@react-query-firebase/firestore": "^0.4.2",
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.2.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
@@ -33,7 +32,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!chess.js)/\"",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -55,6 +54,9 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/react": "^13.3.0",
+    "jest-dom": "^4.0.0",
+    "react-test-render": "^1.1.2",
     "web-vitals": "^2.1.4"
   }
 }

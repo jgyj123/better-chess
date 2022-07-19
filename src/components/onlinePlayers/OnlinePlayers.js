@@ -13,7 +13,7 @@ import {
   doc,
 } from "firebase/firestore";
 
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { realTimeDb, db, auth } from "../../firebase";
 import { onValue, ref, update, remove } from "firebase/database";
 import { Avatar } from "@chakra-ui/react";
@@ -72,8 +72,8 @@ const OnlinePlayers = () => {
       <Text fontSize={26}>Personal Challenges</Text>
       <Box minHeight="10vh " width="100%">
         {challenges.map((gameId) => {
-          const isUser = id == gameId[1].challengerId;
-          if (gameId[1].to != id) return "";
+          const isUser = id === gameId[1].challengerId;
+          if (gameId[1].to !== id) return "";
           return (
             <Flex
               alignItems="center"
@@ -143,7 +143,7 @@ const OnlinePlayers = () => {
       <Text fontSize={26}>Open Challenges</Text>
       <Box minHeight="10vh" width="100%">
         {challenges.map((gameId) => {
-          const isUser = id == gameId[1].challengerId;
+          const isUser = id === gameId[1].challengerId;
           if (gameId[1].to != null) return "";
           return (
             <Flex

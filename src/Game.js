@@ -42,34 +42,42 @@ import { BsCameraVideo, BsChat } from "react-icons/bs";
 import InGameChat from "./components/inGameChatComponents/InGameChat";
 import { BsFlag } from "react-icons/bs";
 import { GrPaint } from "react-icons/gr";
-const pc = new RTCPeerConnection({
-  iceServers: [
-    {
-      urls: ["stun:stun1.l.google.com:19302", "stun:stun2.l.google.com:19302"],
-    },
-    {
-      urls: "turn:openrelay.metered.ca:80",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-    {
-      urls: "turn:openrelay.metered.ca:443?transport=tcp",
-      username: "openrelayproject",
-      credential: "openrelayproject",
-    },
-  ],
-  iceCandidatePoolSize: 10,
-});
 
 const Game = () => {
+  const [pc, setPC] = useState();
   // takes in Game id, white/black
   //When player creates a game, an unique game Id is created and both players will connect to this unique Id.
   // Both users have reference to the same game node on the real-time db based on game Id.
+  useEffect(() => {
+    setPC(
+      new RTCPeerConnection({
+        iceServers: [
+          {
+            urls: [
+              "stun:stun1.l.google.com:19302",
+              "stun:stun2.l.google.com:19302",
+            ],
+          },
+          {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+          {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject",
+          },
+        ],
+        iceCandidatePoolSize: 10,
+      })
+    );
+  }, []);
   const [id, setId] = useState("");
   const [fen, setFen] = useState("start");
   const [color, setColor] = useState("white");
