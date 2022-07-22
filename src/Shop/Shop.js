@@ -47,6 +47,7 @@ import { db, auth } from "../firebase";
 export default function Shop(props) {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [coins, setCoins] = useState([]);
   useEffect(() => {
     const q = query(
       collection(db, "users"),
@@ -59,12 +60,27 @@ export default function Shop(props) {
       setLoading(false);
     });
   }, []);
+  const q = query(
+    collection(db, "users"),
+    where("uid", "==", auth.currentUser.uid)
+  );
+  getDocs(q).then((res) => {
+    const coins = res.docs[0].data().coins;
+    setCoins(coins);
+  });
   if (!loading) {
     return (
       <Box minHeight="100vh" display="flex" flexDir="column">
         <Navbar w="100%" useSignIn={props.signIn} />
-
         <Tabs bg="white" height="80%" width="100%" padding="20px">
+          <Box
+            borderRadius="lg"
+            fontWeight="semibold"
+            fontSize="lg"
+            textAlign={"center"}
+          >
+            Your Coins: {coins}
+          </Box>
           <TabList>
             <Tab>Board Skins</Tab>
             <Tab>Miscellaneous Items</Tab>
@@ -72,7 +88,7 @@ export default function Shop(props) {
           <TabPanels>
             <TabPanel>
               <Box textAlign="center" mb="5px;">
-                <Heading as="h4" size="2xl">
+                <Heading as="h4" size="2xl" letterSpacing="wide">
                   Board Themes
                 </Heading>
               </Box>

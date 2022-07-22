@@ -415,7 +415,7 @@ const Game = () => {
   const gameOverLogic = () => {
     setGameOver(true);
     let w = "white";
-    if (game.current.turn() == "w") {
+    if (game.current.turn() === "w") {
       w = "black";
     }
     setWinner(w);
@@ -486,11 +486,11 @@ const Game = () => {
 
   // adjust elo and coins of players
   const adjustRatings = (eloChange, winner) => {
-    if (winner == "white") {
+    if (winner === "white") {
       adjustRatingAndCoins(playerOneId, eloChange, 50, "w");
       adjustRatingAndCoins(playerTwoId, -eloChange, 10, "l");
       return;
-    } else if (winner == "black") {
+    } else if (winner === "black") {
       adjustRatingAndCoins(playerOneId, -eloChange, 10, "l");
       adjustRatingAndCoins(playerTwoId, eloChange, 50, "w");
     } else if ((winner = "draw")) {
@@ -500,7 +500,7 @@ const Game = () => {
   };
   const adjustRatingAndCoins = (playerId, eloChange, coins, result) => {
     const userRef = doc(db, "users", playerId);
-    if (result == "w") {
+    if (result === "w") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
@@ -509,7 +509,7 @@ const Game = () => {
         currentColor: "",
       });
       return;
-    } else if (result == "l") {
+    } else if (result === "l") {
       updateDoc(userRef, {
         rating: increment(eloChange),
         coins: increment(coins),
