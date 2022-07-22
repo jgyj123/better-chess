@@ -74,6 +74,7 @@ export default function SignupCard() {
                     onChange={(e) => {
                       setFirstName(e.target.value);
                     }}
+                    id="firstName"
                   />
                 </FormControl>
               </Box>
@@ -83,6 +84,7 @@ export default function SignupCard() {
                   <Input
                     type="text"
                     value={lastName}
+                    id="lastName"
                     onChange={(e) => {
                       setLastName(e.target.value);
                     }}
@@ -98,6 +100,7 @@ export default function SignupCard() {
                 onChange={(e) => {
                   setRegisterEmail(e.target.value);
                 }}
+                id="email"
               />
             </FormControl>
             <FormControl id="password" isRequired>
@@ -106,6 +109,7 @@ export default function SignupCard() {
                 <Input
                   type={showPassword ? "text" : "password"}
                   value={registerPassword}
+                  id="password"
                   onChange={(e) => {
                     setRegisterPassword(e.target.value);
                   }}
@@ -126,6 +130,7 @@ export default function SignupCard() {
               <Button
                 loadingText="Submitting"
                 size="lg"
+                id="sign-up-button"
                 bg={"blue.400"}
                 color={"white"}
                 _hover={{

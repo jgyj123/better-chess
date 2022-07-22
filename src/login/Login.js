@@ -118,7 +118,12 @@ export const Login = () => {
               </Heading>
               <HStack spacing="1" justify="center">
                 <Text color="muted">Don&apos;t have an account?</Text>
-                <Button variant="link" colorScheme="blue" onClick={signUp}>
+                <Button
+                  variant="link"
+                  colorScheme="blue"
+                  onClick={signUp}
+                  id="sign-up"
+                >
                   Sign up
                 </Button>
               </HStack>
@@ -170,7 +175,7 @@ export const Login = () => {
                 </Button> */}
               </HStack>
               <Stack spacing="6">
-                <Button colorScheme="messenger" onClick={login}>
+                <Button colorScheme="messenger" onClick={login} id="login">
                   Sign in
                 </Button>
                 <HStack>
@@ -180,7 +185,10 @@ export const Login = () => {
                   </Text>
                   <Divider />
                 </HStack>
-                <OAuthButtonGroup signInWithGoogle={loginWithGoogle} />
+                <OAuthButtonGroup
+                  signInWithGoogle={loginWithGoogle}
+                  id="google-login"
+                />
               </Stack>
             </Stack>
           </Box>

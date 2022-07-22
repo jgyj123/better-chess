@@ -45,6 +45,7 @@ const InGameChat = (props) => {
           position="absolute"
           bottom="10px"
           type="text"
+          id="messageBox"
           placeholder="Enter a message here..."
           value={messageText}
           onChange={(e) => {

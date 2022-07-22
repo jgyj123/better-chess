@@ -77,6 +77,7 @@ export default function Card({
   return (
     <Box
       onClick={() => view(post)}
+      id={itemID}
       cursor="pointer"
       maxW="sm"
       borderWidth="1px"
@@ -103,7 +104,12 @@ export default function Card({
             </ModalBody>
 
             <ModalFooter>
-              <Button colorScheme="blue" variant="solid" onClick={onPurchase}>
+              <Button
+                colorScheme="blue"
+                variant="solid"
+                onClick={onPurchase}
+                id={"testpurchase"}
+              >
                 Purchase
               </Button>
             </ModalFooter>

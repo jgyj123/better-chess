@@ -10,10 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 
-export const DesktopSubNav = ({ label, href, subLabel }) => {
+export const DesktopSubNav = ({ id, label, href, subLabel }) => {
   return (
     <Link
       href={href}
+      id={id}
       role={"group"}
       display={"block"}
       p={2}

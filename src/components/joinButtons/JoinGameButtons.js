@@ -107,6 +107,7 @@ const JoinGameButtons = () => {
         borderColor="#ffffff"
         _hover={{ bg: "#ebedf0", color: "#000000" }}
         onClick={onOpen}
+        id="create-game"
       >
         CREATE GAME
       </Button>
@@ -120,6 +121,7 @@ const JoinGameButtons = () => {
           color="#F5F5F5"
           border="2px"
           borderColor="#ffffff"
+          id="return"
           _hover={{ bg: "#ebedf0", color: "red" }}
           onClick={() => navigate("/game")}
         >
@@ -158,6 +160,7 @@ const JoinGameButtons = () => {
                 colorScheme="blue"
                 m="4px"
                 size="lg"
+                id="test-button"
                 onClick={() => handleClick(900)}
               >
                 15+0
