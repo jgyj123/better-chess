@@ -20,7 +20,7 @@ export default function Navbar(props) {
         align={"center"}
       >
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Link to="/">
+          <Link to="/" id="home">
             <img src={logo} height="40px" width="40px" alt="logo" />
           </Link>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>

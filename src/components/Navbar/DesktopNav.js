@@ -18,7 +18,7 @@ export const DesktopNav = () => {
   return (
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
-        <Box key={navItem.label} alignSelf="center">
+        <Box key={navItem.label} alignSelf="center" id={navItem.labelId}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Link
@@ -62,46 +62,49 @@ export const DesktopNav = () => {
 const NAV_ITEMS = [
   {
     label: "Community",
+    labelId: "community",
     children: [
       {
         label: "Posts and Announcements",
         subLabel: "See all club posts and announcements",
         href: "/",
+        id: "posts",
       },
       {
         label: "Find a Club",
         subLabel: "Search for a community",
         href: "/joinClub",
+        id: "joinClub",
       },
       {
         label: "Create a Club",
         subLabel: "Make your own community",
         href: "/createClub",
+        id: "createClub",
       },
     ],
   },
   {
     label: "Puzzles",
+    labelId: "puzzleId",
     children: [
       {
         label: "Standard",
         subLabel: "Try your hand at puzzles based on ELO",
         href: "/puzzles",
-      },
-      {
-        label: "Statistics",
-        subLabel: "See your puzzle statistics",
-        href: "#",
+        id: "puzzles",
       },
     ],
   },
   {
     label: "Shop",
+    labelId: "shopId",
     children: [
       {
         label: "Board Cosmetics",
         subLabel: "Buy cosmetic changes for the Chess Board",
         href: "/shop",
+        id: "shop",
       },
     ],
   },
