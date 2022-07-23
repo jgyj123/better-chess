@@ -657,7 +657,7 @@ const Game = () => {
   }, []);
   useInterval(() => {
     if (
-      turn == "none" ||
+      turn === "none" ||
       !lastMoveTime ||
       updatingTime ||
       gameOver ||
@@ -849,7 +849,9 @@ const Game = () => {
               <TabPanel maxHeight="60vh" overflowY="scroll">
                 <Box>
                   <Center>
-                    <h2>Board Themes</h2>
+                    <Text fontWeight="bold" letterSpacing="wide">
+                      Board Themes
+                    </Text>
                   </Center>
 
                   {items.map((item) => {
@@ -877,7 +879,9 @@ const Game = () => {
                     }
                   })}
                   <Center marginTop="4px">
-                    <h2>Misc Items</h2>
+                    <Text fontWeight="bold" letterSpacing="wide">
+                      Misc Items
+                    </Text>
                   </Center>
                   {items.map((item) => {
                     if (item > 3) {
@@ -1219,7 +1223,12 @@ const Game = () => {
               <Button onClick={resign} disabled={gameOver || !playerTwoId}>
                 <BsFlag />
               </Button>
-              <Button onClick={offerDraw} disabled={gameOver || !playerTwoId}>
+              <Button
+                onClick={offerDraw}
+                disabled={
+                  incomingDrawOffer !== "none" || gameOver || !playerTwoId
+                }
+              >
                 1/2
               </Button>
             </Flex>
@@ -1239,8 +1248,8 @@ const Game = () => {
                 ""
               )}
             </Flex>
-            {incomingDrawOffer != "none" &&
-            incomingDrawOffer == color &&
+            {incomingDrawOffer !== "none" &&
+            incomingDrawOffer === color &&
             !gameOver ? (
               <Center>
                 <Text>Draw Offered</Text>
@@ -1248,8 +1257,8 @@ const Game = () => {
             ) : (
               ""
             )}
-            {incomingDrawOffer != "none" &&
-            incomingDrawOffer != color &&
+            {incomingDrawOffer !== "none" &&
+            incomingDrawOffer !== color &&
             !gameOver ? (
               <Flex
                 direction="column"

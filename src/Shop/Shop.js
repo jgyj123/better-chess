@@ -139,8 +139,8 @@ export default function Shop(props) {
             </TabPanel>
             <TabPanel>
               <Box textAlign="center">
-                <Heading as="h4" size="2xl">
-                  Misc Items
+                <Heading as="h4" size="2xl" letterSpacing="wide">
+                  Board Themes
                 </Heading>
               </Box>
               <Grid
