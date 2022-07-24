@@ -146,15 +146,11 @@ const OnlinePlayers = () => {
           const isUser = id === gameId[1].challengerId;
           if (gameId[1].to != null) return "";
           return (
-            <Flex
-              alignItems="center"
-              width="100%"
-              justifyContent="space-evenly"
-            >
-              <Center>
+            <Flex alignItems="center" width="100%" marginBottom="5px">
+              <Center width="30%">
                 <Avatar src={gameId[1].challengerPic} />
               </Center>
-              <Box>
+              <Box width="40%">
                 <Text>{gameId[1].challenger}</Text>
                 <Text color="gray.500" fontSize="16px">
                   {gameId[1].timeControl / 60} mins
@@ -205,7 +201,7 @@ const OnlinePlayers = () => {
                   });
                 }}
               >
-                {isUser ? "Searching..." : "Join Game"}
+                {isUser ? "Searching" : "Join Game"}
               </Button>
             </Flex>
           );
