@@ -137,6 +137,9 @@ export default function SignupCard() {
                   bg: "blue.500",
                 }}
                 onClick={createUser}
+                disabled={
+                  !firstName || !lastName || !registerEmail || !registerPassword
+                }
               >
                 Sign up
               </Button>

@@ -61,13 +61,17 @@ const OnlinePlayers = () => {
         <Text fontSize={26}>Online Players</Text>
       </Center>
       <Box height="50%" overflow="scroll" width="100%">
-        {onlineUsers.map((user) => (
-          <OnlinePlayerTile
-            displayName={user.name}
-            key={user.id}
-            playerId={user.id}
-          />
-        ))}
+        {onlineUsers.map((user) =>
+          user.id == id ? (
+            ""
+          ) : (
+            <OnlinePlayerTile
+              displayName={user.name}
+              key={user.id}
+              playerId={user.id}
+            />
+          )
+        )}
       </Box>
       <Text fontSize={26}>Personal Challenges</Text>
       <Box minHeight="10vh " width="100%">

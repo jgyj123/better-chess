@@ -146,6 +146,8 @@ const Game = () => {
   const localRef = useRef();
   const remoteRef = useRef();
   const setupSources = async () => {
+    const gameRef = ref(realTimeDb, "games/" + id);
+
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
@@ -164,6 +166,9 @@ const Game = () => {
     setWebcamActive(true);
 
     if (mode === "create" && !created) {
+      update(gameRef, {
+        mode: "join",
+      });
       const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
@@ -179,11 +184,7 @@ const Game = () => {
       };
 
       await setDoc(callDoc, { offer });
-      const gameRef = ref(realTimeDb, "games/" + id);
 
-      update(gameRef, {
-        mode: "join",
-      });
       setCreated(true);
       onSnapshot(callDoc, (snapshot) => {
         const data = snapshot.data();
@@ -203,37 +204,39 @@ const Game = () => {
         });
       });
     } else if (mode === "join" && !created) {
-      const callDoc = doc(collection(db, "calls"), roomId);
-      const offerCandidates = collection(callDoc, "offerCandidates");
-      const answerCandidates = collection(callDoc, "answerCandidates");
-      pc.onicecandidate = (event) => {
-        event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
-      };
+      setTimeout(async () => {
+        const callDoc = doc(collection(db, "calls"), roomId);
+        const offerCandidates = collection(callDoc, "offerCandidates");
+        const answerCandidates = collection(callDoc, "answerCandidates");
+        pc.onicecandidate = (event) => {
+          event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+        };
 
-      const callData = (await getDoc(callDoc)).data();
-      const offerDescription = callData.offer;
-      await pc.setRemoteDescription(
-        new RTCSessionDescription(offerDescription)
-      );
+        const callData = (await getDoc(callDoc)).data();
+        const offerDescription = callData.offer;
+        await pc.setRemoteDescription(
+          new RTCSessionDescription(offerDescription)
+        );
 
-      const answerDescription = await pc.createAnswer();
-      await pc.setLocalDescription(answerDescription);
+        const answerDescription = await pc.createAnswer();
+        await pc.setLocalDescription(answerDescription);
 
-      const answer = {
-        sdp: answerDescription.sdp,
-        type: answerDescription.type,
-      };
+        const answer = {
+          sdp: answerDescription.sdp,
+          type: answerDescription.type,
+        };
 
-      await updateDoc(callDoc, { answer });
+        await updateDoc(callDoc, { answer });
 
-      onSnapshot(offerCandidates, (snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === "added") {
-            let data = change.doc.data();
-            pc.addIceCandidate(new RTCIceCandidate(data));
-          }
+        onSnapshot(offerCandidates, (snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === "added") {
+              let data = change.doc.data();
+              pc.addIceCandidate(new RTCIceCandidate(data));
+            }
+          });
         });
-      });
+      }, 1000);
     }
     pc.onconnectionstatechange = (event) => {
       if (pc.connectionState === "disconnected") {
@@ -414,7 +417,7 @@ const Game = () => {
       let eloGain = calculateDrawEloChange(rating, opponentRating);
       const newPlayerOneRating = playerOneRating - eloGain;
       const newPlayerTwoRating = playerTwoRating + eloGain;
-      adjustRatings(eloGain, color);
+      adjustRatings(eloGain, "draw");
       update(gameRef, {
         playerOneRating: newPlayerOneRating,
         playerTwoRating: newPlayerTwoRating,
@@ -424,7 +427,7 @@ const Game = () => {
       return;
     }
     let eloGain = calculateDrawEloChange(rating, opponentRating);
-    adjustRatings(eloGain, color);
+    adjustRatings(eloGain, "draw");
     const newPlayerOneRating = playerOneRating + eloGain;
     const newPlayerTwoRating = playerTwoRating - eloGain;
     update(gameRef, {
@@ -437,15 +440,10 @@ const Game = () => {
 
   const gameOverLogic = () => {
     setGameOver(true);
-    let w = "white";
-    if (game.current.turn() === "w") {
-      w = "black";
-    }
-    setWinner(w);
 
-    if (w === color) {
+    if (winner === color) {
       handleWin();
-    } else {
+    } else if (winner !== color && winner != "draw") {
       handleLoss();
     }
   };

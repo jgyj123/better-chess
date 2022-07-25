@@ -10,6 +10,8 @@ import {
   Tab,
   TabPanels,
   TabPanel,
+  Flex,
+  Image,
 } from "@chakra-ui/react";
 import Navbar from "../components/Navbar/Navbar";
 import Card from "./ItemCard";
@@ -73,18 +75,24 @@ export default function Shop(props) {
       <Box minHeight="100vh" display="flex" flexDir="column">
         <Navbar w="100%" useSignIn={props.signIn} />
         <Tabs bg="white" height="80%" width="100%" padding="20px">
+          <Flex alignItems="center" width="100%" justifyContent={"center"}>
+            Coins:
+            <Box boxSize="20px" marginLeft="10px">
+              <Image src="./coin.png" />
+            </Box>
+            {coins}
+          </Flex>
           <Box
             borderRadius="lg"
             fontWeight="semibold"
             fontSize="lg"
             textAlign={"center"}
-          >
-            Your Coins: {coins}
-          </Box>
+          ></Box>
           <TabList>
             <Tab>Board Skins</Tab>
             <Tab>Miscellaneous Items</Tab>
           </TabList>
+
           <TabPanels>
             <TabPanel>
               <Box textAlign="center" mb="5px;">

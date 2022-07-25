@@ -103,13 +103,15 @@ const OnlinePlayerTile = (props) => {
       alignItems="center"
       justifyContent="space-evenly"
       marginBottom="10px"
+      padding="4px"
     >
       <Avatar />
-      <Text marginLeft="10px" w="40%">
+      <Text marginLeft="10px" w="30%">
         {props.displayName}
       </Text>
       <Button colorScheme="teal" size="xs" marginLeft="3" onClick={onOpen}>
-        <GiBroadsword />
+        Challenge
+        <GiBroadsword marginLeft="2px" />
       </Button>
       <>
         <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>

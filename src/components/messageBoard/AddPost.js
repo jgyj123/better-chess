@@ -84,13 +84,16 @@ const AddPost = (props) => {
             onChange={(e) => {
               setMessage(e.target.value);
             }}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                submitPost();
+              }
+            }}
           ></Input>
           <Spacer />
           <ButtonGroup gap="1">
             <Select placeholder="Choose a club" onChange={handleChange}>
-              <option value="general" selected="selected">
-                General
-              </option>
+              <option value="general">General</option>
               {props.clubs != null ? (
                 props.clubs.map((club) => {
                   return <option value={club.id}>{club.name}</option>;
