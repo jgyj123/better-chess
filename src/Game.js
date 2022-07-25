@@ -135,6 +135,11 @@ const Game = () => {
   const [loading, setLoading] = useState(false);
   const [playerOneIcon, setPlayerOneIcon] = useState("");
   const [playerTwoIcon, setPlayerTwoIcon] = useState("");
+  const [loadingVideo, setLoadingVideo] = useState(true);
+  const [loadingState, setLoadingState] = useState(
+    "Please wait for your opponent to start the call"
+  );
+  const [callOngoing, setCallOngoing] = useState(false);
   const [rendered, setRendered] = useState(false);
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
@@ -146,8 +151,7 @@ const Game = () => {
   const localRef = useRef();
   const remoteRef = useRef();
   const setupSources = async () => {
-    const gameRef = ref(realTimeDb, "games/" + id);
-
+    setCallOngoing(true);
     const localStream = await navigator.mediaDevices.getUserMedia({
       video: true,
       audio: true,
@@ -166,9 +170,6 @@ const Game = () => {
     setWebcamActive(true);
 
     if (mode === "create" && !created) {
-      update(gameRef, {
-        mode: "join",
-      });
       const callDoc = doc(collection(db, "calls"), roomId);
       const offerCandidates = collection(callDoc, "offerCandidates");
       const answerCandidates = collection(callDoc, "answerCandidates");
@@ -203,40 +204,42 @@ const Game = () => {
           }
         });
       });
+      const gameRef = ref(realTimeDb, "games/" + id);
+      update(gameRef, {
+        mode: "join",
+      });
     } else if (mode === "join" && !created) {
-      setTimeout(async () => {
-        const callDoc = doc(collection(db, "calls"), roomId);
-        const offerCandidates = collection(callDoc, "offerCandidates");
-        const answerCandidates = collection(callDoc, "answerCandidates");
-        pc.onicecandidate = (event) => {
-          event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
-        };
+      const callDoc = doc(collection(db, "calls"), roomId);
+      const offerCandidates = collection(callDoc, "offerCandidates");
+      const answerCandidates = collection(callDoc, "answerCandidates");
+      pc.onicecandidate = (event) => {
+        event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
+      };
 
-        const callData = (await getDoc(callDoc)).data();
-        const offerDescription = callData.offer;
-        await pc.setRemoteDescription(
-          new RTCSessionDescription(offerDescription)
-        );
+      const callData = (await getDoc(callDoc)).data();
+      const offerDescription = callData.offer;
+      await pc.setRemoteDescription(
+        new RTCSessionDescription(offerDescription)
+      );
 
-        const answerDescription = await pc.createAnswer();
-        await pc.setLocalDescription(answerDescription);
+      const answerDescription = await pc.createAnswer();
+      await pc.setLocalDescription(answerDescription);
 
-        const answer = {
-          sdp: answerDescription.sdp,
-          type: answerDescription.type,
-        };
+      const answer = {
+        sdp: answerDescription.sdp,
+        type: answerDescription.type,
+      };
 
-        await updateDoc(callDoc, { answer });
+      await updateDoc(callDoc, { answer });
 
-        onSnapshot(offerCandidates, (snapshot) => {
-          snapshot.docChanges().forEach((change) => {
-            if (change.type === "added") {
-              let data = change.doc.data();
-              pc.addIceCandidate(new RTCIceCandidate(data));
-            }
-          });
+      onSnapshot(offerCandidates, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === "added") {
+            let data = change.doc.data();
+            pc.addIceCandidate(new RTCIceCandidate(data));
+          }
         });
-      }, 1000);
+      });
     }
     pc.onconnectionstatechange = (event) => {
       if (pc.connectionState === "disconnected") {
@@ -576,6 +579,11 @@ const Game = () => {
     getDocs(q).then((res) => {
       const newId = res.docs[0].data().currentGame;
       setColor(res.docs[0].data().currentColor);
+      if (res.docs[0].data().currentColor === "white") {
+        setLoadingVideo(false);
+      } else {
+        setLoadingVideo(true);
+      }
       if (newId == null || newId == "") {
         navigate("/");
       }
@@ -610,6 +618,11 @@ const Game = () => {
         setTurn(data.turn);
         setPlayerOnePic(data.playerOnePic);
         setMode(data.mode);
+        if (data.mode === "join") {
+          setLoadingVideo(false);
+        } else if (data.mode === "create" && color === "black") {
+          setLoadingVideo(true);
+        }
         setFen(data.fen);
         setGameOver(data.gameEnded);
         setPlayerOneName(data.playerOneName);
@@ -810,6 +823,7 @@ const Game = () => {
                     bg: "blue.500",
                   }}
                   onClick={setupSources}
+                  disabled={loadingVideo || callOngoing}
                 >
                   Start Video
                 </Button>
@@ -829,9 +843,21 @@ const Game = () => {
                     bg: "blue.500",
                   }}
                   onClick={hangUp}
+                  disabled={loadingVideo || !callOngoing}
                 >
                   End Video
                 </Button>
+                {mode === "join" && color === "black" ? (
+                  <Text color="gray.600" fontSize="12px">
+                    Your opponent has started the call
+                  </Text>
+                ) : color === "black" ? (
+                  <Text color="gray.600" fontSize="12px">
+                    Please wait for your opponent to start the call
+                  </Text>
+                ) : (
+                  ""
+                )}
               </TabPanel>
               <TabPanel>
                 <InGameChat
