@@ -2,8 +2,7 @@ import { React, useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import Chessboard from "chessboardjsx";
 import { db, auth, realTimeDb } from "./firebase";
-import { update, ref, onValue, off, set } from "firebase/database";
-
+import { update, ref, onValue, off, get } from "firebase/database";
 import { BiTimer } from "react-icons/bi";
 import { AspectRatio, Avatar, Image } from "@chakra-ui/react";
 import { useInterval } from "@chakra-ui/react";
@@ -141,6 +140,7 @@ const Game = () => {
   );
   const [callOngoing, setCallOngoing] = useState(false);
   const [rendered, setRendered] = useState(false);
+  const [offset, setOffset] = useState(0);
 
   // Either we convert the videoCalling portion into an exportable component or we bring over the functionality
   /*
@@ -309,7 +309,8 @@ const Game = () => {
 
     if (lastMoveTime != null) {
       if (color === "white") {
-        var newTime = storedOne - parseInt((Date.now() - lastMoveTime) / 1000);
+        var newTime =
+          storedOne - parseInt((Date.now() - lastMoveTime + offset) / 1000);
         if (!gameStarted) {
           newTime = storedOne;
         }
@@ -325,7 +326,8 @@ const Game = () => {
           turn: game.current.turn(),
         });
       } else {
-        var newTime = storedTwo - parseInt((Date.now() - lastMoveTime) / 1000);
+        var newTime =
+          storedTwo - parseInt((Date.now() - lastMoveTime + offset) / 1000);
         if (!gameStarted) {
           newTime = storedTwo;
         }
@@ -607,6 +609,7 @@ const Game = () => {
 
       //setup game listener
       gameRef = ref(realTimeDb, "games/" + newId);
+
       onValue(gameRef, (snapshot) => {
         const data = snapshot.val();
         if (data.pgn !== "start") {
@@ -630,9 +633,11 @@ const Game = () => {
         setPlayerOneId(data.playerOne);
         setGameStarted(data.gameStarted);
         setStoredOne(data.playerOneTime);
-        setPlayerOneTime(data.playerOneTime);
-        setPlayerTwoTime(data.playerTwoTime);
         setStoredTwo(data.playerTwoTime);
+        if (!gameStarted && !data.gameEnded && !data.drawOffer) {
+          setPlayerOneTime(data.playerOneTime);
+          setPlayerTwoTime(data.playerTwoTime);
+        }
 
         if (data.lastMoveTime != null) {
           setLastMoveTime(data.lastMoveTime);
@@ -658,6 +663,15 @@ const Game = () => {
           setPlayerTwoIcon(data.playerTwoIcon);
         }
       });
+      //setup latency listener
+      const offsetRef = ref(realTimeDb, ".info/serverTimeOffset");
+      onValue(offsetRef, (snap) => {
+        console.log("latency");
+        const offset = snap.val();
+
+        console.log(offset);
+        setOffset(offset);
+      });
       setRendered(true);
     });
 
@@ -677,12 +691,13 @@ const Game = () => {
       return;
     }
 
-    const timeLeft = parseInt((Date.now() - lastMoveTime) / 1000);
+    const timeLeft = parseInt((Date.now() - lastMoveTime + offset) / 1000);
 
     if (turn === "w") {
       setPlayerOneTimerColor("red");
       setPlayerTwoTimerColor("black");
       setPlayerOneTime(storedOne - timeLeft);
+      setPlayerTwoTime(storedTwo);
       if (storedOne - timeLeft <= 0) {
         setPlayerOneTime(0);
         setWinner("black");
@@ -697,6 +712,7 @@ const Game = () => {
       setPlayerOneTimerColor("black");
       setPlayerTwoTimerColor("red");
       setPlayerTwoTime(storedTwo - timeLeft);
+      setPlayerOneTime(storedOne);
       if (storedTwo - timeLeft <= 0) {
         setPlayerTwoTime(0);
         setWinner("white");
