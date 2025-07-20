@@ -34,6 +34,7 @@ BetterChess is a modern, community-focused chess platform designed to revolution
 ---
 
  ![Poster](docs/images/multiple-themes.png)
+ 
 *Screenshot 2: Rich customzsation options for users while playing*
 
 ---
