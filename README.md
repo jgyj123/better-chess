@@ -5,13 +5,16 @@
 **Orbital 2022 - Apollo 11 Level Achievement**  
 **Team "Fried Liver"** - Ezra Tio & Jonathan Goh
 
+**Note:** This project holds special meaning for me as my introduction to full-stack development, especially since I’ve been passionate about chess for the past 18 years. 😊
+
 ---
 
 ## 🎯 What Is BetterChess?
 
 BetterChess is a modern, community-focused chess platform designed to revolutionize how players connect, compete, and grow together. Built with React and Firebase, our platform addresses the limitations of existing chess sites by emphasizing social interaction, community building, and meaningful rewards.
 
-This project means a lot to be as my introduction ot full-stack development as someone who has been playing chess for the past 18 years :)
+
+
 
  ![Live](docs/images/live-session.png)
 *Screenshot 1: Live picture of us working on the project!*
